@@ -1,0 +1,5 @@
+project(helloworld)
+add_executable(helloworld main.cpp)
+target_link_libraries(helloworld ${COMMON_LIBS})
+target_deploy_file(helloworld vshader.glsl) 
+target_deploy_file(helloworld fshader.glsl)
