@@ -41,7 +41,7 @@ FIND_LIBRARY( GLFW_LIBRARIES NAMES glfw PATHS
     /usr/lib
     /opt/X11/lib
     /opt/lib 
-    ${CMAKE_SOURCE_DIR}/external/glfw/lib/win32)
+    ${CMAKE_SOURCE_DIR}/external/glfw/lib)
 
 SET(GLFW_FOUND "NO")
 IF(GLFW_LIBRARIES AND GLFW_INCLUDE_DIRS)
