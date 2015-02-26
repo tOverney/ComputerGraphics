@@ -6,4 +6,5 @@ include(common/icg_settings.cmake)
 
 #add_subdirectory(helloworld)
 add_subdirectory(intro_to_glsl)
+add_subdirectory(intro_to_glsl_SOLUTION)
 
