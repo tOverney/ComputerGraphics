@@ -1,0 +1,5 @@
+get_filename_component(EXERCISENAME ${CMAKE_CURRENT_LIST_DIR} NAME)
+add_executable(${EXERCISENAME} main.cpp Quad.h)
+target_link_libraries(${EXERCISENAME} ${COMMON_LIBS})
+target_deploy_file(${EXERCISENAME} quad_vshader.glsl) 
+target_deploy_file(${EXERCISENAME} quad_fshader.glsl)
