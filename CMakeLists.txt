@@ -9,8 +9,7 @@ include(common/icg_settings.cmake)
 add_subdirectory(intro_to_glsl)
 add_subdirectory(intro_to_glsl_SOLUTION)
 
-add_subdirectory(spiral)       #HW 2 - part 1
-add_subdirectory(checkerboard) #HW 2 - part 2
-add_subdirectory(planets)      #HW 2 - part 3
-
-
+#--- Homework 2
+add_subdirectory(hw2p1_spiral)       
+add_subdirectory(hw2p2_checkerboard) 
+add_subdirectory(hw2p3_planets)      
