@@ -87,23 +87,19 @@ if(NOT EIGEN3_FOUND)
     message(ERROR " EIGEN not found!")
 endif() 
 
-
 #--- Common headers/libraries for all the exercises
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 SET(COMMON_LIBS ${OPENGL_LIBRARIES} ${GLFW_LIBRARIES} ${GLEW_LIBRARIES})
 
-# Strip all the solutions from any glsl/cpp file underneath a ex1/2/3..etc folder
-# 
-# USAGE: "cmake -DSTRIP_CODE=TRUE ../"
-if(STRIP_CODE)
-    file(GLOB_RECURSE SHRS "*.glsl")
-    file(GLOB_RECURSE SRCS "*.cpp")
-    set(FILES ${SHRS} ${SRCS})
-    foreach(filename ${FILES})
-        message(STATUS "stripping file: " ${filename})
-        # command: unifdef -DSTRIP_CODE filename
-        execute_process(COMMAND unifdef -DSTRIP_CODE -o ${filename} ${filename})
-    endforeach()
+#--- OpenCV (Optional!!)
+find_package(PkgConfig)
+if(PKGCONFIG_FOUND)
+    pkg_check_modules(OPENCV opencv)
+    list(APPEND COMMON_LIBS ${OPENCV_LDFLAGS})
+    include_directories(${OPENCV_INCLUDE_DIRS})
+    if(OPENCV_FOUND)
+        add_definitions(-DWITH_OPENCV)
+    endif()
 endif()
 
 #--- OBSOLETE: as now shaders are deployed in .h files

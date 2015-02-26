@@ -5,11 +5,19 @@
 #include <GL/glew.h> ///< must be before glfw
 #include <GL/glfw.h>
 
+///--- Linux needs extensions for framebuffers
+#if __unix__
+#define GL_GLEXT_PROTOTYPES 1
+#include <GL/gl.h>
+#include <GL/glext.h>
+#endif
+
 ///--- Standard library IO
 #include <iostream>
+#include <cassert>
 
 ///--- We use Eigen for linear algebra
-#include "Eigen/Dense"
+#include <Eigen/Dense>
 typedef Eigen::Vector2f vec2;
 typedef Eigen::Vector3f vec3;
 typedef Eigen::Vector4f vec4;
@@ -30,6 +38,9 @@ typedef Eigen::Matrix3f mat3;
 
 ///--- Shader compiling utilities
 #include "OpenGP/GL/shader_helpers.h"
+
+///--- OpenGL error checking (TODO: move to OpenGP)
+#include "check_error_gl.h"
 
 ///--- Utilities to simplify glfw setup
 #include <OpenGP/GL/glfw_helpers.h>

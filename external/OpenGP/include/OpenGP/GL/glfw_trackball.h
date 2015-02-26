@@ -29,7 +29,7 @@ namespace{
         glViewport(0, 0, width, height);
     }    
     
-#if 0
+#ifdef TODO_TRACKBALL_KEYBOARD
     void keyboard(int key, int action){
         bool view_matrices_changed = false;
         if (action == GLFW_PRESS) {
@@ -149,9 +149,9 @@ namespace{
         glfwSetMousePosCallback(mouse_pos);
         glfwSetMouseWheelCallback(mouse_wheel);
         glfwSetWindowSizeCallback(resize);
-#if 0        
-        // glfwSetKeyCallback(keyboard);
-#endif    
+#ifdef TODO_TRACKBALL_KEYBOARD
+        glfwSetKeyCallback(keyboard);
+#endif
     }
 }
 
