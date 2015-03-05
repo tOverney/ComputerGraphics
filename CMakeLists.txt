@@ -12,4 +12,5 @@ add_subdirectory(intro_to_glsl_SOLUTION)
 #--- Homework 2
 add_subdirectory(hw2p1_spiral)       
 add_subdirectory(hw2p2_checkerboard) 
-add_subdirectory(hw2p3_planets)      
+add_subdirectory(hw2p3_planets)  
+add_subdirectory(hw2p4_arkanoid)    

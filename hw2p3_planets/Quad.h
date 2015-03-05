@@ -71,7 +71,12 @@ public:
     }
        
     void cleanup(){
-        /// TODO: cleanup 
+        glBindVertexArray(0);
+        glUseProgram(0);
+        glDeleteVertexArrays(1, &_vao);
+        glDeleteBuffers(1, &_vbo);
+        glDeleteProgram(_pid);
+        glDeleteTextures(1, &_tex);
     }
     
     void draw(const mat4& M){
