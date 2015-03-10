@@ -1,6 +1,7 @@
 #include "icg_common.h"
 #include "cube.h"
 #include "_quad/Quad.h"
+#include <Eigen/Geometry>
 
 using namespace std;
 
@@ -33,8 +34,42 @@ mat4 LookAt(vec3 eye, vec3 center, vec3 up) {
     // TODO 3: Create an view matrix that transforms a vector from world space into
     // the camera coordinate system. The camera is located at 'eye' and looks
     // 'center'.
-    mat4 look_at = mat4::Identity();
+
+    // r = u x v
+    // u = up
+    // v = center
+    // look_at = r u -v -r x e
+    vec3 z_axis = (center - eye).normalized();
+    vec3 x_axis = ((z_axis).cross(up.normalized())).normalized();
+    vec3 y_axis = x_axis.cross(z_axis);
+
+
+    mat4 look_at;
+    look_at <<  x_axis(0), x_axis(1), x_axis(2), 0,
+                y_axis(0), y_axis(1), y_axis(2), 0,
+                -z_axis(0), -z_axis(1), -z_axis(2), 0,
+                0,0,0,1;
+                //-x_axis.dot(eye), -y_axis.dot(eye), -z_axis.dot(eye), 1;
     return look_at;
+}
+
+mat4 orthographicProjection() {
+    double top (1.0);
+    double bottom (-top);
+    double right ((WIDTH * (top - bottom)) / (HEIGHT*2));
+    double left (-right);
+    double far (10);
+    double near (-10);
+
+    mat4 matrx = mat4::Identity();
+    matrx(0,0) = 2 / (right - left);
+    matrx(1,1) = 2 / (top - bottom);
+    matrx(2,2) = -2 / (far - near);
+    matrx(0,3) = -(right + left) / (right - left);
+    matrx(1,3) = -(top + bottom) / (top - bottom);
+    matrx(2,3) = -(far + near)/(far - near);
+
+    return matrx;
 }
 
 // Gets called when the windows is resized.
@@ -44,7 +79,7 @@ void resize_callback(int width, int height) {
 
     std::cout << "Window has been resized to " << WIDTH << "x" << HEIGHT << "." << std::endl;
     // TODO 1: Reset the OpenGL framebuffer size.
-    // glViewport(...);
+    glViewport(0,0,WIDTH,HEIGHT);
 
     // TODO 2: Set up an orthographic projection matrix.
     // The projection should depend on the aspect ratio (WIDTH / HEIGHT).
@@ -52,8 +87,7 @@ void resize_callback(int width, int height) {
     // the given aspect ratio.
     // It might be useful to create a OrthographicProjection function that
     // such a projection matrix.
-    projection_matrix = mat4::Identity();
-    //projection_matrix = OrthographicProjection(...)
+    projection_matrix = orthographicProjection();
 }
 
 void init(){
@@ -67,8 +101,7 @@ void init(){
     glEnable(GL_DEPTH_TEST);
 
     // TODO 3: Complete the LookAt function and use it here.
-    view_matrix = mat4::Identity();
-    //view_matrix = LookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = LookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 }
 
 // Gets called for every frame.

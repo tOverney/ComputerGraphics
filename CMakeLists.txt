@@ -11,8 +11,8 @@ include(common/icg_settings.cmake)
 #add_subdirectory(intro_to_glsl_SOLUTION)
 #add_subdirectory(hw2p1_spiral)       
 #add_subdirectory(hw2p2_checkerboard) 
-#add_subdirectory(hw2p3_planets) 
-add_subdirectory(hw2p4_arkanoid)  
+add_subdirectory(hw2p3_planets) 
+#add_subdirectory(hw2p4_arkanoid)  
 
 #--- Week 3
 add_subdirectory(lab3_opengl3d)

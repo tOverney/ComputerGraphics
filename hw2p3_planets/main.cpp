@@ -72,8 +72,8 @@ void renderSun(float delta_t, float& alpha, float& x) {
 
 void renderEarth(float delta_t, float alpha, float& x, float& y) {
 
-    x = (x + 0.4) * cos(alpha);
-    y =  0.5 * sin(alpha);
+    x = (x + 0.4) * cos(-alpha);
+    y =  0.5 * sin(-alpha);
 
     Celestial_object* current = &solar_system[1];
 

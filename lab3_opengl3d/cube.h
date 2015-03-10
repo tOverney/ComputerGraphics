@@ -46,7 +46,22 @@ public:
         // Index buffer
         // TODO 4: Fill in the indices of all the remaining triangles
         const GLuint index[] = {0, 1, 2,  // Front face triangle 1
-                                0, 2, 3}; // Front face triangle 2
+                                0, 2, 3, // Front face triangle 2
+
+                                1, 5, 6, // right 1
+                                1, 6, 2, // right 2
+
+                                7, 6, 5, // back 1
+                                7, 5, 4, // back 2
+
+                                0, 3, 4, // left 1
+                                4, 3, 7, // left 2
+
+                                3, 2, 6, // top 1
+                                3, 6, 7, // top 2
+
+                                4, 5, 1, // bottom 1
+                                4, 1, 0}; // bottom 2
 
         _num_indices = sizeof(index) / sizeof(GLuint);
 
