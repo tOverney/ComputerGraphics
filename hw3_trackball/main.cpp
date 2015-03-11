@@ -2,6 +2,7 @@
 #include "cube.h"
 #include "trackball.h"
 #include "_grid/grid.h"
+#include <math.h>
 
 using namespace std;
 
@@ -29,13 +30,34 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
     ortho(0, 3) = -(right + left) / (right - left);
     ortho(1, 3) = -(top + bottom) / (top - bottom);
     ortho(2, 3) = -(far + near) / (far - near);
+    
     return ortho;
 }
 
 mat4 PerspectiveProjection(float fovy, float aspect, float near, float far){
+
     // TODO 1: Create a perspective projection matrix given the field of view,
     // aspect ratio, and near and far plane distances.
-    mat4 projection = mat4::Identity();
+    
+ 
+    assert(far > near);
+    
+    float f= 1 / tan((fovy/2)*M_PI/180.0);
+    float a11 = f/(aspect);
+    float a22 = f;
+    float a33 = (near + far)/(near-far);
+    float a34 = 2*far*near/(near-far);
+    float a43 = -1.0f;
+    
+   mat4 projection;
+    projection << a11, 0, 0, 0,
+                  0, a22, 0, 0,
+                  0, 0, a33, a34,
+                  0, 0, a43, 0;
+       
+    std::cout << projection;
+    
+    //mat4 projection = mat4::Identity();
     return projection;
 }
 
@@ -80,10 +102,12 @@ void resize_callback(int width, int height) {
     glViewport(0, 0, WIDTH, HEIGHT);
 
     // TODO 1: Use a perspective projection instead;
-    //projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
-    GLfloat top = 1.0f;
-    GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
-    projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
+    projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
+ /*
+  GLfloat top = 1.0f;
+  GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
+  projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
+*/
 }
 
 void init(){
@@ -181,3 +205,6 @@ int main(int, char**){
     glfwMainLoop();
     return EXIT_SUCCESS;
 }
+
+
+
