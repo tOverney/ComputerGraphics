@@ -22,16 +22,12 @@ uniform wave_conf waves[4] = wave_conf[4](
 );
 
 float h_computing(int index) {
-    float freq = 22.0;
-    float phase = 1.0;
-    float amplitude = 0.04;
-    vec2 vec_vit = vec2(1.0, 1.0);
 
     float sine = sin(waves[index].freq * 
         dot(uv, waves[index].vec_vit) + waves[index].phase * time);
 
-    // bug with negative values..
-    return waves[index].amplitude*pow(abs((sine + 1)/2), 1.4);
+    // bug with negative values so here is an abs
+    return waves[index].amplitude*pow(abs((sine + 1)/2), 2);
 }
 
 void main() {
