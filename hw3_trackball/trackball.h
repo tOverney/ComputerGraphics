@@ -1,5 +1,9 @@
 #pragma once
 #include "icg_common.h"
+#include <math.h>
+#include <Eigen/Dense>
+
+typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
 class Trackball {
 public:
@@ -22,7 +26,17 @@ public:
       vec3 current_pos = vec3(x, y, 0.0f);
       project_onto_surface(current_pos);
 
-      mat4 rotation = mat4::Identity();
+
+      current_pos.normalize();
+      _anchor_pos.normalize();
+      vec3 N = _anchor_pos.cross(current_pos);
+      double teta = acos(_anchor_pos.dot(current_pos));
+      std::cout << "[_anchor_pos.x, _anchor_pos.y, _anchor_pos.z] = " << "[" << _anchor_pos.x() << ", " << _anchor_pos.y() << ", " << _anchor_pos.z() << "]  ";
+      std::cout << "[current_pos.x, current_pos.y, current_pos.z] = " << "[" << current_pos.x() << ", " << current_pos.y() << ", " << current_pos.z() << "]  " << endl;
+      Transform _M = Transform::Identity();
+      _M *= Eigen::AngleAxisf(teta, N);
+
+      mat4 rotation = _M.matrix();
       // TODO 3: Calculate the rotation given the projections of the anocher
       // point and the current position. The rotation axis is given by the cross
       // product of the two projected points, and the angle between them can be
@@ -40,7 +54,21 @@ private:
     // https://www.opengl.org/wiki/Object_Mouse_Trackball.
     // The trackball radius is given by '_radius'.
     void project_onto_surface(vec3& p) const {
+
       // TODO 2: Implement this function. Read above link for details.
+      p.y() = -p.y();
+      double flag = pow(p.x(),2) + pow(p.y(),2);
+
+      if (flag <= pow(_radius,2)/2.0) {
+        p.z() = sqrt(pow(_radius,2) - flag);
+      } else {
+        p.z() = (pow(_radius,2)/2.0)/sqrt(flag);
+      }
+      
+    }
+
+    double radians(double degree) {
+      return degree * M_PI/180;
     }
 
     float _radius;
