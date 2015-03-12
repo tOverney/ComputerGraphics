@@ -31,8 +31,6 @@ public:
       _anchor_pos.normalize();
       vec3 N = _anchor_pos.cross(current_pos);
       double teta = acos(_anchor_pos.dot(current_pos));
-      std::cout << "[_anchor_pos.x, _anchor_pos.y, _anchor_pos.z] = " << "[" << _anchor_pos.x() << ", " << _anchor_pos.y() << ", " << _anchor_pos.z() << "]  ";
-      std::cout << "[current_pos.x, current_pos.y, current_pos.z] = " << "[" << current_pos.x() << ", " << current_pos.y() << ", " << current_pos.z() << "]  " << endl;
       Transform _M = Transform::Identity();
       _M *= Eigen::AngleAxisf(teta, N);
 
@@ -56,7 +54,6 @@ private:
     void project_onto_surface(vec3& p) const {
 
       // TODO 2: Implement this function. Read above link for details.
-      p.y() = -p.y();
       double flag = pow(p.x(),2) + pow(p.y(),2);
 
       if (flag <= pow(_radius,2)/2.0) {

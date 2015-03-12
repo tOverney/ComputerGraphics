@@ -206,7 +206,6 @@ void mouse_pos(int x, int y) {
         double x_p, y_p;
         vec2 p = transform_screen_coords(x, y);
         y_p = p.y();
-        std::cout << "[y_o, y_p]  = [" << y_o << ", " << y_p << "]" << endl;
         Transform _M = Transform::Identity();
         _M *= Eigen::Translation3f(0, 0, y_p - y_o);
         y_o = y_p; 
