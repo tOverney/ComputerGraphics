@@ -2,7 +2,6 @@
 #include "cube.h"
 #include "trackball.h"
 #include "_grid/grid.h"
-#include <math.h>
 
 using namespace std;
 
@@ -54,8 +53,6 @@ mat4 PerspectiveProjection(float fovy, float aspect, float near, float far){
                   0, a22, 0, 0,
                   0, 0, a33, a34,
                   0, 0, a43, 0;
-       
-    std::cout << projection;
     
     //mat4 projection = mat4::Identity();
     return projection;

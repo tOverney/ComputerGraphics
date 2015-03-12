@@ -20,7 +20,7 @@ public:
         // Vertex one vertex Array
         glGenVertexArrays(1, &_vao);
         glBindVertexArray(_vao);
-     
+
         // Vertex coordinates and indices
         {
             std::vector<GLfloat> vertices;
@@ -29,21 +29,51 @@ public:
             // Always two subsequent entries in 'vertices' form a 2D vertex position.
             int grid_dim = 100;
 
+            /* e.g. a small grid will be numbered as such in vertices:
+                2 1 0
+                5 4 3
+                8 7 6
+
+                so we'll have to take the indexes in the following order:
+                0 3 1 / 1 3 4 / 2 4 5
+
+                and we have to repeat the begining / end of lines to avoid "border"
+                effects.
+             */
+
+            // indexes
+            for (int y = 0; y < grid_dim - 1; ++y) {
+                indices.push_back(y * grid_dim);
+                for (int x = 0; x < grid_dim; ++x) {
+                    indices.push_back(y * grid_dim + x);
+                    indices.push_back((y + 1) * grid_dim + x);
+                }
+                indices.push_back((y + 1) * grid_dim + (grid_dim - 1));
+            }
+
+            // positions
+            for(int y = 0; y < grid_dim; y++) {
+                for(int x = 0; x < grid_dim; x++) {
+                    vertices.push_back(1.0f - (2.0 * x)/grid_dim);
+                    vertices.push_back(1.0f - (2.0 * y)/grid_dim);
+                }
+            }
+
             // The given code below are the vertices for a simple quad.
             // Your grid should have the same dimension as that quad, i.e.,
             // reach from [-1, -1] to [1, 1].
 
             // Vertex position of the triangles.
-            vertices.push_back(-1.0f); vertices.push_back( 1.0f);
-            vertices.push_back( 1.0f); vertices.push_back( 1.0f);
-            vertices.push_back( 1.0f); vertices.push_back(-1.0f);
-            vertices.push_back(-1.0f); vertices.push_back(-1.0f);
+            // vertices.push_back(-1.0f); vertices.push_back( 1.0f);
+            // vertices.push_back( 1.0f); vertices.push_back( 1.0f);
+            // vertices.push_back( 1.0f); vertices.push_back(-1.0f);
+            // vertices.push_back(-1.0f); vertices.push_back(-1.0f);
 
             // And indices.
-            indices.push_back(0);
-            indices.push_back(1);
-            indices.push_back(3);
-            indices.push_back(2);
+            // indices.push_back(0);
+            // indices.push_back(1);
+            // indices.push_back(3);
+            // indices.push_back(2);
 
             _num_indices = indices.size();
 

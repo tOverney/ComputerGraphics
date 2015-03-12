@@ -15,6 +15,6 @@ include(common/icg_settings.cmake)
 #add_subdirectory(hw2p4_arkanoid)  
 
 #--- Week 3
-add_subdirectory(lab3_opengl3d)      
-add_subdirectory(lab3_opengl3d_SOLUTION)
+#add_subdirectory(lab3_opengl3d)      
+#add_subdirectory(lab3_opengl3d_SOLUTION)
 add_subdirectory(hw3_trackball)      
