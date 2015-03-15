@@ -12,6 +12,12 @@ uniform vec3 light_pos;
 in vec3 vpoint;
 in vec3 vnormal;
 
+vec4 light_dir;
+vec4 view_dir;
+vec4 reflect_dir;
+
+out vec3 vcolor;
+
 
 
 void main() {
@@ -25,4 +31,31 @@ void main() {
     /// 3) compute the view direction view_dir.
     /// 4) compute per vertex color
     ///<<<<<<<<<< TODO <<<<<<<<<<<
+
+    /// Computation
+    vec4 vnormal_mv = inverse(transpose(MV)) * vec4(vnormal, 1.0);
+    light_dir = vec4(light_pos, 1.0) - vpoint_mv;
+    view_dir = vpoint_mv;
+    reflect_dir = reflect(-light_dir, vec4(vnormal,1.0));
+
+    ///Projection to view_model
+    vec4 light_dir_mv = normalize(light_dir);
+    vec4 view_dir_mv = normalize(view_dir);
+    vec4 reflect_dir_mv = normalize(reflect_dir);
+    vnormal_mv = normalize(vnormal_mv);
+
+    //Color computation 
+    float NL = dot(vnormal_mv,light_dir_mv);
+    float VR = dot(view_dir_mv, reflect_dir_mv);
+
+    if(NL < 0) {
+        NL = 0;
+    }
+
+    if(VR < 0) {
+        VR = 0;
+    }
+
+    vcolor = Ia*ka + Id*kd*(dot(vnormal_mv,light_dir_mv)) + Is*ks*pow(dot(view_dir_mv, reflect_dir_mv),p);
+
 }
