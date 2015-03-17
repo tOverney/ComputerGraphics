@@ -102,6 +102,12 @@ private:
         ///--- Textures
         ///---- TODO ---
         /// TODO 2.1 Bind _tex1D for toon shading
+        if(_pid == _pid_toon) {
+            GLuint tex1D = glGetUniformLocation(_pid, "tex1D");
+            glUniform1i(tex1D, 0 /*GL_TEXTURE0*/);
+            glActiveTexture(GL_TEXTURE_1D);
+            glBindTexture(GL_TEXTURE_1D,tex1D);
+        }
         /// TODO 3.1 Bind _tex2D for artistic shading
     }
 

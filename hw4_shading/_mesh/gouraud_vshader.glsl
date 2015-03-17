@@ -12,9 +12,6 @@ uniform vec3 light_pos;
 in vec3 vpoint;
 in vec3 vnormal;
 
-vec4 light_dir;
-vec4 view_dir;
-vec4 reflect_dir;
 
 out vec3 vcolor;
 
@@ -33,29 +30,28 @@ void main() {
     ///<<<<<<<<<< TODO <<<<<<<<<<<
 
     /// Computation
-    vec4 vnormal_mv = inverse(transpose(MV)) * vec4(vnormal, 1.0);
-    light_dir = vec4(light_pos, 1.0) - vpoint_mv;
-    view_dir = vpoint_mv;
-    reflect_dir = reflect(-light_dir, vec4(vnormal,1.0));
+    vec3 light_pos_mv = light_pos;
+    vec3 vnormal_mv =normalize((inverse(transpose(MV)) * vec4(vnormal, 1.0f)).xyz);
+    vec3 light_dir_mv = normalize((vec4(light_pos_mv,1.0f) - vpoint_mv).xyz);
+    vec3 view_dir_mv = normalize((-vpoint_mv).xyz);
+    
 
-    ///Projection to view_model
-    vec4 light_dir_mv = normalize(light_dir);
-    vec4 view_dir_mv = normalize(view_dir);
-    vec4 reflect_dir_mv = normalize(reflect_dir);
-    vnormal_mv = normalize(vnormal_mv);
+    vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
+    
 
-    //Color computation 
-    float NL = dot(vnormal_mv,light_dir_mv);
-    float VR = dot(view_dir_mv, reflect_dir_mv);
 
-    if(NL < 0) {
-        NL = 0;
-    }
+    
+    float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0.0);
+    vec3 diffuse = Id*kd*diffuse_angle;
+    
+    float specular_angle = max(pow(dot(view_dir_mv,reflect_dir_mv),p),0.0);
+    vec3 specular = Is*ks*specular_angle;
+    
+    vec3 ambient = Ia*ka;
+    
+    
 
-    if(VR < 0) {
-        VR = 0;
-    }
 
-    vcolor = Ia*ka + Id*kd*(dot(vnormal_mv,light_dir_mv)) + Is*ks*pow(dot(view_dir_mv, reflect_dir_mv),p);
+    vcolor = ambient + diffuse + specular;
 
 }

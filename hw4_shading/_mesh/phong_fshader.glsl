@@ -6,9 +6,9 @@ uniform float p;
 
 out vec3 color;
 
-in vec4 view_dir_mv;
-in vec4 vnormal_mv;
-in vec4 light_dir_mv;
+in vec3 view_dir_mv;
+in vec3 vnormal_mv;
+in vec3 light_dir_mv;
 
 void main() {
     color = vec3(0.0,0.0,0.0);
@@ -29,7 +29,9 @@ void main() {
     /// 2) compute diffuse term.
     /// 3) compute specular term.
     ///<<<<<<<<<< TODO <<<<<<<<<<<
-    float specular_angle = max(dot(light_dir_mv,view_dir_mv),0);
+    vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
+    
+    float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0);
     vec3 specular = Is*ks*pow(specular_angle,p);
 
     float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0);
