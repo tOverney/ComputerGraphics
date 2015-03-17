@@ -4,6 +4,9 @@
 uniform float p;
 uniform sampler2D tex2D;
 
+in vec3 view_dir_mv;
+in vec3 vnormal_mv;
+in vec3 light_dir_mv;
 
 out vec3 color;
 
@@ -24,4 +27,11 @@ void main() {
     /// TODO 3.2: Artistic shading.
     /// 1) compute the output color by doing a look-up in the texture using the texture sampler tex.
     ///<<<<<<<<<< TODO <<<<<<<<<<<
+	
+	vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
+    float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0); -> y
+	
+	float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0);
+	color = texture(tex2D, vec2(diffuse_angle, specular_angle)).rgb;
+	
 }
