@@ -29,7 +29,7 @@ void main() {
     ///<<<<<<<<<< TODO <<<<<<<<<<<
 	
 	vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
-    float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0); -> y
+    float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0); 
 	
 	float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0);
 	color = texture(tex2D, vec2(diffuse_angle, specular_angle)).rgb;
