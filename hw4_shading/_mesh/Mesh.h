@@ -111,9 +111,8 @@ private:
         /// TODO 3.1 Bind _tex2D for artistic shading
 		
 		if(_pid == _pid_art) {
-			GLuint _tex2D = glGetUniformLocation(_pid, "tex2D");
+			//GLuint _tex2D = glGetUniformLocation(_pid, "tex2D");
 			glActiveTexture(GL_TEXTURE0);
-			//glUniform1i(_tex2D, 0);
 			glBindTexture(GL_TEXTURE_2D, _tex2D);
 		}
 		
