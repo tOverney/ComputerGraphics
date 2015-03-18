@@ -19,4 +19,6 @@ void main() {
     /// 1) compute the light direction light_dir.
     /// 2) compute the view direction view_dir.
     ///<<<<<<<<<< TODO <<<<<<<<<<<
+    light_dir = normalize((vec4(light_pos,1.0f) - vpoint_mv).xyz);
+    view_dir = normalize(-vpoint_mv.xyz);
 }
