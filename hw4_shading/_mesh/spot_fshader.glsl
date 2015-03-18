@@ -2,6 +2,9 @@
 
 const float spot_cos_cutoff = 0.985; // cos 10 degrees
 const float spot_exp = 150;
+uniform vec3 Ia, Id, Is;
+uniform vec3 ka, kd, ks;
+uniform float p;
 
 out vec3 color;
 
