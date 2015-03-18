@@ -103,15 +103,14 @@ private:
         ///---- TODO ---
         /// TODO 2.1 Bind _tex1D for toon shading
         if(_pid == _pid_toon) {
-            GLuint tex1D = glGetUniformLocation(_pid, "tex1D");
-            glUniform1i(tex1D, 0 /*GL_TEXTURE0*/);
+            
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_1D,tex1D);
+            glBindTexture(GL_TEXTURE_1D,_tex1D);
         }
         /// TODO 3.1 Bind _tex2D for artistic shading
 		
 		if(_pid == _pid_art) {
-			//GLuint _tex2D = glGetUniformLocation(_pid, "tex2D");
+			
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, _tex2D);
 		}
