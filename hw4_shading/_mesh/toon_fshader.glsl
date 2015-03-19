@@ -24,13 +24,11 @@ void main() {
     ///<<<<<<<<<< TODO <<<<<<<<<<<
     vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
 
-    float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0);
-
-    float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0);
-
-    vec3 ambient = Ia*ka;
+    float VR = max(dot(reflect_dir_mv,view_dir_mv),0);
+    float NL= max(dot(vnormal_mv,light_dir_mv),0);
+   
 
 
-    color = ambient + Id*kd*texture(tex1D,diffuse_angle).xyz + Is*ks*texture(tex1D,specular_angle).xyz;
+    color = texture(tex1D,NL).rgb + texture(tex1D,VR).rgb;
 
 }
