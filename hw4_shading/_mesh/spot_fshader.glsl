@@ -11,6 +11,7 @@ out vec3 color;
 in vec3 view_dir_mv;
 in vec3 vnormal_mv;
 in vec3 light_dir_mv;
+in vec3 spot_dir_mv;
 
 void main() {    
     const vec3 COLORS[6] = vec3[](
@@ -31,13 +32,18 @@ void main() {
     vec3 reflect_dir_mv =normalize(reflect(-light_dir_mv, vnormal_mv));
     
     float specular_angle = max(pow(dot(reflect_dir_mv,view_dir_mv),p),0);
-    vec3 specular = Is*ks*pow(specular_angle,p);
+    vec3 specular = Is*ks*specular_angle;
 
     float diffuse_angle = max(dot(vnormal_mv,light_dir_mv),0);
     vec3 diffuse = Id*kd*diffuse_angle;
 
     vec3 ambient = Ia*ka;
+    
+    vec3 phong = ambient + diffuse + specular;
+    
+    float cone_cos = dot(light_dir_mv, spot_dir_mv);
 
+    float spot_effect = pow(cone_cos, spot_exp);
 
-    color = ambient + diffuse + specular;
+    color = phong * spot_effect;
 }
