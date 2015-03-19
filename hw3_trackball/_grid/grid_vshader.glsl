@@ -39,7 +39,7 @@ void main() {
     // 'time' and the position ('uv') within the grid.
    
     float height = 0;
-    for (int i = 1; i <= 4; i ++ ) {
+    for (int i = 0; i <= 3; i ++ ) {
         height += h_computing(i);
     }
 
