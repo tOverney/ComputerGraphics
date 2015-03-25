@@ -84,7 +84,7 @@ private:
         /// Assume piece-wise linear approximation of the curve
         /// http://math.stackexchange.com/questions/12186/arc-length-of-bézier-curves
         ///================================================
-  /* 
+   
 		for(int i = 1 ; i<_vertices.size(); ++i){
 			
 			vec3 v = _vertices.at(i);
@@ -97,7 +97,7 @@ private:
 			float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.9));
 			_param.at(i) = distance;
 			}
-			* */
+			
    
     }
 public:
@@ -145,31 +145,28 @@ public:
         /// The distance along the curve from _vertices[0] to sample is
         /// t * curve_length
         ///================================================
-       /*  if (t > 0.0 && t <= 1.0)  {
-			 int maxParamIndex = _param.size() - 1; 
-			 float curve_length = _param.at(maxParamIndex); 
-			 float distance = t * curve_length;
-
-			int i = 0; 
-			while(i <= maxParamIndex && _param.at(i) < distance){ 
-				i = i + 1; 
-			}
-
-			vec3 v1; 
-			vec3 v2; 
-			if (i == 0) { 
-				v1 = _vertices.at(0); 
-				v2 = _vertices.at(1); 
-				} 
-			else{ 
-				v1 = _vertices.at(i); 
-				v2 = _vertices.at(i + 1); 
-	}
+       
+       if(t<=1.0 && t >0.0){
+		   
+		   float curve_length = _param.at(_param.size()-1);
+		   float cam_dist = t*curve_length;
+		   
+		   //cherche les vertices
+		   int i = 0;
+		   while(i<_param.size() && _param.at(_param.size()-1)){
+			   i++;
+		   }
+			vec3 v0 = _vertices.at(i);
+			vec3 v1 = _vertices.at(i+1);
+		   
+		   }
+       
+ 
 
 // linear interpolation 
-float mu = (distance - _param[i-1]) / (_param[i] - _param[i-1]); 
-sample = mu * _vertices[i+1] + (1 - mu) * _vertices[i]; 
-}*/
+//float mu = (distance - _param[i-1]) / (_param[i] - _param[i-1]); 
+//sample = mu * _vertices[i+1] + (1 - mu) * _vertices[i]; 
+
 }
         
         
