@@ -1,4 +1,5 @@
 #include "icg_common.h"
+#include "math.h"
 
 const static Scalar H = .7;
 const static Scalar R = 2;
@@ -40,6 +41,36 @@ private:
         /// - Split at \alpha = 0.5
         /// - Save the points to _vertices
         ///================================================
+        
+        Hull l;
+        Hull r;
+        
+        //--- endpoints
+        l.p1() = p.p1();
+        r.p4() = p.p4();
+        
+        //--- one-in
+        l.p2() = (p.p1() + p.p2()) / 2.0;
+        r.p3() = (p.p3() + p.p4()) / 2.0;
+        
+        //--- interior
+        l.p3() = ( l.p2() + (p.p2() + p.p3())/2.0 )/2.0;
+        r.p2() = ( r.p3() + (p.p2() + p.p3())/2.0 )/2.0;
+        
+        //--- middle
+        l.p4() = ( l.p3() + r.p2() ) / 2.0;
+        r.p1() = l.p4();
+        
+        //--- recursion v.s. draw
+        if(depth<5){
+            bezier(l,depth+1);
+            bezier(r,depth+1);
+        } else {
+            _vertices.push_back(l.p1());
+        }
+        _vertices.push_back(p.p4());
+        
+        
     }
 
     void compute_parameterization(){
@@ -53,6 +84,21 @@ private:
         /// Assume piece-wise linear approximation of the curve
         /// http://math.stackexchange.com/questions/12186/arc-length-of-bézier-curves
         ///================================================
+  /* 
+		for(int i = 1 ; i<_vertices.size(); ++i){
+			
+			vec3 v = _vertices.at(i);
+			vec3 v0 = _vertices.at(0);
+			
+			float diffX = v.x()-v0.x();
+			float diffY = v.y()-v0.y();
+			float diffZ = v.z()-v0.z();
+			
+			float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.9));
+			_param.at(i) = distance;
+			}
+			* */
+   
     }
 public:
     void init(GLuint pid){
@@ -99,6 +145,11 @@ public:
         /// The distance along the curve from _vertices[0] to sample is
         /// t * curve_length
         ///================================================
+        
+        
+        
+        
+  
     }
     void draw(const mat4& model, const mat4& view, const mat4& projection){
         if (_vertices.empty()) return;

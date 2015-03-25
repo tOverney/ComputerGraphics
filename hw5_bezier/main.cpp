@@ -96,6 +96,19 @@ void init(){
     /// Don't forget to set correct point ids.
     /// ===============================================
 
+///--- init cam_pos_curve
+    cam_pos_curve.init(_pid_bezier);
+    cam_pos_points.push_back(ControlPoint(-0.79, 0.09, 0.2, 0));
+    cam_pos_points.push_back(ControlPoint(-0.88, -0.71, 0.2, 1));
+    cam_pos_points.push_back(ControlPoint(1.3, -0.8, 0.2, 2));
+    cam_pos_points.push_back(ControlPoint(0.71, 0.76, 0.2, 3));
+    for (unsigned int i = 0; i < cam_pos_points.size(); i++) {
+        cam_pos_points[i].id() = i;
+        cam_pos_points[i].init(_pid_point, _pid_point_selection);
+    }
+
+    cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
+
     ///--- Setup view-projection matrix
     float ratio = window_width / (float) window_height;
     projection = Eigen::perspective(45.0f, ratio, 0.1f, 10.0f);
@@ -118,6 +131,27 @@ bool unproject (int mouse_x, int mouse_y, vec3 &p) {
     /// 2) Find new screen-space coordinates from mouse position
     /// 3) Obtain object coordinates p
     ///================================================
+    
+    ///step 1
+	mat4 MVP = projection * view * model * trackball_matrix;
+    
+    vec4 p4(p.x(), p.y(), p.z(), 1);
+    vec4 p_screen = MVP * p4;
+    
+    vec2 screen_coords = transform_screen_coords(mouse_x, mouse_y);
+    
+    p_screen.x() = screen_coords.x()*p_screen.w();
+    p_screen.y() = screen_coords.y()*p_screen.w();
+    
+        
+    ///step 2  
+      mat4 invMVP = MVP.inverse();
+      vec4 p_scr = invMVP * p_screen;
+      
+      vec3 p3(p_scr.x()/p_scr.w(), p_scr.y()/p_scr.w(), p_scr.z()/p_scr.w());
+      
+      p = p3;
+
     return true;
 }
 
@@ -139,8 +173,8 @@ void display(){
         ///================================================
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
-        quad.draw(model, view_bezier, projection);
-        cube.draw(model, view_bezier, projection);
+        quad.draw(trackball_matrix * model, view_bezier, projection);
+        cube.draw(trackball_matrix * model, view_bezier, projection);
     }
 
     if (navmode == TRACKBALL) {
@@ -168,6 +202,10 @@ void render_selection() {
     ///===================== TODO =====================
     ///--- TODO P5.2 Draw control points for selection
     ///================================================
+
+	for (unsigned int i = 0; i < cam_pos_points.size(); i++) {
+        cam_pos_points[i].draw_selection(trackball_matrix*model, view, projection);
+    }
 
     ///===================== TODO =====================
     ///--- TODO H5.3 Draw control points for cam_look_curve
