@@ -89,7 +89,20 @@ void init(){
     cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
 
     ///--- init cam_look_curve
-    cam_look_curve.init(_pid_bezier);
+   /* cam_look_curve.init(_pid_bezier);
+    cam_look_curve.push_back(ControlPoint(-0.79, 0.09, 0.2, 0));
+    cam_look_curve.push_back(ControlPoint(-0.88, -0.71, 0.2, 1));
+    cam_look_curve.push_back(ControlPoint(1.3, -0.8, 0.2, 2));
+    cam_look_curve.push_back(ControlPoint(2.3, 0.8, 0.7, 2));
+    cam_look_curve.push_back(ControlPoint(0.71, 0.76, 0.2, 3));
+    for (unsigned int i = 0; i < cam_look_curve.size(); i++) {
+        cam_look_curve[i].id() = i;
+        cam_look_curve[i].init(_pid_point, _pid_point_selection);
+    }
+
+    cam_look_curve.set_points(cam_look_curve0].position(), cam_look_curve[1].position(), cam_look_curve[2].position(), cam_look_curve[3].position());
+
+   */ 
 
     ///===================== TODO =====================
     ///--- TODO H5.3: Set points for cam_look_curve here

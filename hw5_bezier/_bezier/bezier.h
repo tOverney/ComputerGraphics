@@ -145,12 +145,37 @@ public:
         /// The distance along the curve from _vertices[0] to sample is
         /// t * curve_length
         ///================================================
-        
+       /*  if (t > 0.0 && t <= 1.0)  {
+			 int maxParamIndex = _param.size() - 1; 
+			 float curve_length = _param.at(maxParamIndex); 
+			 float distance = t * curve_length;
+
+			int i = 0; 
+			while(i <= maxParamIndex && _param.at(i) < distance){ 
+				i = i + 1; 
+			}
+
+			vec3 v1; 
+			vec3 v2; 
+			if (i == 0) { 
+				v1 = _vertices.at(0); 
+				v2 = _vertices.at(1); 
+				} 
+			else{ 
+				v1 = _vertices.at(i); 
+				v2 = _vertices.at(i + 1); 
+	}
+
+// linear interpolation 
+float mu = (distance - _param[i-1]) / (_param[i] - _param[i-1]); 
+sample = mu * _vertices[i+1] + (1 - mu) * _vertices[i]; 
+}*/
+}
         
         
         
   
-    }
+    
     void draw(const mat4& model, const mat4& view, const mat4& projection){
         if (_vertices.empty()) return;
 
