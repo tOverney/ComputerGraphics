@@ -170,8 +170,8 @@ void display(){
         /// parameter.
         ///================================================
         float time = glfwGetTime()/5;
-        sample_point(time, &cam_pos);
-        sample_point(time, &cam_look);
+        cam_pos_curve.sample_point(time, &cam_pos);
+        cam_look_curve.sample_point(time, &cam_look);
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
         quad.draw(trackball_matrix * model, view_bezier, projection);
