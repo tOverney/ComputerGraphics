@@ -89,6 +89,17 @@ void init(){
     cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
 
     ///--- init cam_look_curve
+    cam_look_curve.init(_pid_bezier);
+    cam_look_points.push_back(ControlPoint(-1.79, 0.1, 0.2, 0));
+    cam_look_points.push_back(ControlPoint(0.88, -0.71, 0.62, 1));
+    cam_look_points.push_back(ControlPoint(1.3, 0.8, 0.2, 2));
+    cam_look_points.push_back(ControlPoint(-0.71, -0.76, -0.2, 3));
+    for (unsigned int i = 0; i < cam_look_points.size(); i++) {
+        cam_look_points[i].id() = i+cam_pos_points.size();
+        cam_look_points[i].init(_pid_point, _pid_point_selection);
+    }
+
+    cam_look_curve.set_points(cam_look_points[0].position(), cam_look_points[1].position(), cam_look_points[2].position(), cam_look_points[3].position());
 
 
     ///===================== TODO =====================
@@ -96,20 +107,7 @@ void init(){
     /// Don't forget to set correct point ids.
     /// ===============================================
 
-///--- init cam_pos_curve
-    cam_pos_curve.init(_pid_bezier);
-    cam_pos_points.push_back(ControlPoint(-0.79, 0.09, 0.2, 0));
-    cam_pos_points.push_back(ControlPoint(-0.88, -0.71, 0.2, 1));
-    cam_pos_points.push_back(ControlPoint(1.3, -0.8, 0.2, 2));
-    cam_pos_points.push_back(ControlPoint(0.71, 0.76, 0.2, 3));
-    for (unsigned int i = 0; i < cam_pos_points.size(); i++) {
-        cam_pos_points[i].id() = i;
-        cam_pos_points[i].init(_pid_point, _pid_point_selection);
-    }
-
-    cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
-
-    ///--- Setup view-projection matrix
+  ///--- Setup view-projection matrix
     float ratio = window_width / (float) window_height;
     projection = Eigen::perspective(45.0f, ratio, 0.1f, 10.0f);
 
@@ -131,34 +129,34 @@ bool unproject (int mouse_x, int mouse_y, vec3 &p) {
     /// 2) Find new screen-space coordinates from mouse position
     /// 3) Obtain object coordinates p
     ///================================================
-    
+
     ///step 1
-	mat4 MVP = projection * view * model * trackball_matrix;
-    
+    mat4 MVP = projection * view * model * trackball_matrix;
+
     vec4 p4(p.x(), p.y(), p.z(), 1);
     vec4 p_screen = MVP * p4;
-    
+
     vec2 screen_coords = transform_screen_coords(mouse_x, mouse_y);
-    
+
     p_screen.x() = screen_coords.x()*p_screen.w();
     p_screen.y() = screen_coords.y()*p_screen.w();
-    
-        
-    ///step 2  
+
+
+    ///step 2
       mat4 invMVP = MVP.inverse();
       vec4 p_scr = invMVP * p_screen;
-      
+
       vec3 p3(p_scr.x()/p_scr.w(), p_scr.y()/p_scr.w(), p_scr.z()/p_scr.w());
-      
+
       p = p3;
 
     return true;
 }
 
 void display(){
-    opengp::update_title_fps("shading");   
+    opengp::update_title_fps("shading");
     glViewport(0,0,window_width,window_height);
-        
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (navmode == BEZIER) {
         vec3 cam_pos(2.0f, 2.0f, 2.0f);
@@ -171,6 +169,9 @@ void display(){
         /// Use glfwGetTime() and wrap it to [0, 1] to get the curve
         /// parameter.
         ///================================================
+        float time = glfwGetTime()/5;
+        sample_point(time, &cam_pos);
+        sample_point(time, &cam_look);
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
         quad.draw(trackball_matrix * model, view_bezier, projection);
@@ -210,6 +211,10 @@ void render_selection() {
     ///===================== TODO =====================
     ///--- TODO H5.3 Draw control points for cam_look_curve
     ///================================================
+    
+    	for (unsigned int i = 0; i < cam_look_points.size(); i++) {
+        cam_look_points[i].draw_selection(trackball_matrix*model, view, projection);
+    }
 }
 
 void selection_button(int button, int action) {
@@ -234,6 +239,11 @@ void selection_button(int button, int action) {
         ///===================== TODO =====================
         ///--- TODO H5.3 Process cam_look_points for selection
         ///================================================
+        
+        if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size()+cam_pos_points.size())
+            cam_look_points[selected_point-cam_pos_points.size()].selected() = true;
+
+
     }
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -243,6 +253,12 @@ void selection_button(int button, int action) {
         ///===================== TODO =====================
         ///--- TODO H5.3 Process cam_look_points for selection
         ///================================================
+        
+        if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size() + cam_pos_points.size()) {
+            cam_look_points[selected_point- cam_pos_points.size()].selected() = false;
+        }
+
+
         int x = 0, y = 0;
         glfwGetMousePos(&x, &y);
         if (x == x_pressed && y == y_pressed) {
@@ -254,9 +270,18 @@ void selection_button(int button, int action) {
 
             cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
         }
+        
+        
+
         ///===================== TODO =====================
         ///--- TODO H5.3 Update control points of cam_look_curve
         ///================================================
+
+        if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size() + cam_pos_points.size()) {
+            unproject(x, y, cam_look_points[selected_point-cam_pos_points.size()].position());
+
+            cam_look_curve.set_points(cam_look_points[0].position(), cam_look_points[1].position(), cam_look_points[2].position(), cam_look_points[3].position());
+        }
     }
 }
 

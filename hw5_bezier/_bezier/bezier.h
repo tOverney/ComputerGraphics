@@ -34,14 +34,7 @@ private:
     
 private:
     void bezier(Hull& p, int depth=0){
-        ///===================== TODO =====================
-        ///--- TODO P5.3: Compute the bezier curve using
-        /// "de Casteljau" subdivision algorithm:
-        /// - Use 5 splits
-        /// - Split at \alpha = 0.5
-        /// - Save the points to _vertices
-        ///================================================
-        
+
         Hull l;
         Hull r;
         
@@ -94,7 +87,7 @@ private:
 			float diffY = v.y()-v0.y();
 			float diffZ = v.z()-v0.z();
 			
-			float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.9));
+			float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.0));
 			_param.at(i) = distance;
 			}
 			
@@ -147,25 +140,21 @@ public:
         ///================================================
        
        if(t<=1.0 && t >0.0){
-		   
+
 		   float curve_length = _param.at(_param.size()-1);
 		   float cam_dist = t*curve_length;
 		   
 		   //cherche les vertices
 		   int i = 0;
-		   while(i<_param.size() && _param.at(_param.size()-1)){
+		   while(i<_param.size() && _param.at(_param.size()-1)<cam_dist){
 			   i++;
 		   }
 			vec3 v0 = _vertices.at(i);
 			vec3 v1 = _vertices.at(i+1);
-		   
+                        float a = (dist_cam - _param[i-1])/(_param[i] - _param[i-1]);
+                        sample = a * _vertices[i+1] + ( 1-a) * _vertices[i];
 		   }
-       
- 
 
-// linear interpolation 
-//float mu = (distance - _param[i-1]) / (_param[i] - _param[i-1]); 
-//sample = mu * _vertices[i+1] + (1 - mu) * _vertices[i]; 
 
 }
         
