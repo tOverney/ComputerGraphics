@@ -144,12 +144,12 @@ public:
         float cam_dist = t*curve_length;
 
         //cherche les vertices
-        int i = 0;
+        int i = 1;
         while(i < _param.size() && _param[_param.size()-1] < cam_dist){
             i++;
         }
-        vec3 v0 = _vertices[i];
-        vec3 v1 = _vertices[i+1];
+        vec3 v0 = _vertices[i-1];
+        vec3 v1 = _vertices[i];
 
         float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
         sample =  a*v1 + (1 - a)*v0;
