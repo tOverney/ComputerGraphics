@@ -190,7 +190,7 @@ void display(){
         /// Use glfwGetTime() and wrap it to [0, 1] to get the curve
         /// parameter.
         ///================================================
-        float time = glfwGetTime()/5;
+        float time = glfwGetTime();
         for(unsigned int i = 0; i<bezier_curves.size(); i++ ) {
             bezier_curves.at(i).sample_point(time, cam_pos);
         }
