@@ -81,14 +81,14 @@ private:
         for(int i = 1 ; i<_vertices.size(); ++i){
 
             vec3 v = _vertices.at(i);
-            vec3 v0 = _vertices.at(0);
+            vec3 v0 = _vertices.at(i-1);
 
             float diffX = v.x()-v0.x();
             float diffY = v.y()-v0.y();
             float diffZ = v.z()-v0.z();
 
             float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.0));
-            _param.at(i) = distance;
+            _param.at(i) = distance + _param.at(i-1);
         }
     }
 
@@ -144,12 +144,12 @@ public:
         float cam_dist = t*curve_length;
 
         //cherche les vertices
-        int i = 0;
+        int i = 1;
         while(i < _param.size() && _param[_param.size()-1] < cam_dist){
             i++;
         }
-        vec3 v0 = _vertices[i];
-        vec3 v1 = _vertices[i+1];
+        vec3 v0 = _vertices[i-1];
+        vec3 v1 = _vertices[i];
 
         float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
         sample =  a*v1 + (1 - a)*v0;
