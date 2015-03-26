@@ -128,7 +128,7 @@ public:
         return (a<b);
     }
 
-    void sample_point(double t, vec3 &sample) {
+    void sample_point(double t, vec3& sample) {
         if (_vertices.empty() || _param.empty()) {
             return;
         }
@@ -151,8 +151,8 @@ public:
 		   }
 		   vec3 v0 = _vertices.at(i);
 		   vec3 v1 = _vertices.at(i+1);
-                   float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
-                   sample = a *v1[i+1] + ( 1-a) * v0[i];
+           float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
+           sample =  a*v1 + (1 - a)*v0;
      }
 
 
