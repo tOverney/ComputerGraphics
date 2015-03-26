@@ -140,7 +140,7 @@ public:
 
         t = sin(t);
 
-        float curve_length = _param.at(_param.size()-1);
+        float curve_length = _param[_param.size()-1];
         float cam_dist = t*curve_length;
 
         //cherche les vertices
