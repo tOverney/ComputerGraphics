@@ -11,6 +11,8 @@ enum NAVIGATION_MODE {
     BEZIER
 } navmode;
 
+const static double CAMERA_SPEED = 0.2;
+
 int window_width = 1300;
 int window_height = 640;
 
@@ -191,10 +193,19 @@ void display(){
         /// parameter.
         ///================================================
         float time = glfwGetTime();
-        for(unsigned int i = 0; i<bezier_curves.size(); i++ ) {
-            bezier_curves.at(i).sample_point(time, cam_pos);
-        }
-        cam_look_curve.sample_point(time, cam_look);
+        float t = 0.5*sin(CAMERA_SPEED * time) + 0.5;
+
+        float lengthA = bezier_curves.front().getLength();
+        float lengthB = bezier_curves.back().getLength();
+
+        float threshold = lengthA / (lengthA + lengthB);
+        int currentcurve = (t < threshold) ? 0 : 1;
+        float fake_time = (t < threshold) ? t / threshold :
+            (t - threshold) / (1 - threshold);
+
+        bezier_curves[currentcurve].sample_point(fake_time, cam_pos);
+
+        cam_look_curve.sample_point(t, cam_look);
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
         quad.draw(model, view_bezier, projection);

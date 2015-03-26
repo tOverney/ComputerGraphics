@@ -138,9 +138,7 @@ public:
         /// t * curve_length
         ///================================================
 
-        t = sin(t);
-
-        float curve_length = _param[_param.size()-1];
+        float curve_length = _param.back();
         float cam_dist = t*curve_length;
 
         //cherche les vertices
@@ -155,7 +153,9 @@ public:
         sample =  a*v1 + (1 - a)*v0;
     }
 
-        
+    float getLength() {
+        return _param.back();
+    }
         
   
     
