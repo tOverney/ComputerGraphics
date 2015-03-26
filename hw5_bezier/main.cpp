@@ -94,18 +94,17 @@ void init(){
     cam_look_points.push_back(ControlPoint(0.88, -0.71, 0.62, 1));
     cam_look_points.push_back(ControlPoint(1.3, 0.8, 0.2, 2));
     cam_look_points.push_back(ControlPoint(-0.71, -0.76, -0.2, 3));
+ 
+    ///===================== TODO =====================
+    ///--- TODO H5.3: Set points for cam_look_curve here
+    /// Don't forget to set correct point ids.
+    /// ===============================================
     for (unsigned int i = 0; i < cam_look_points.size(); i++) {
         cam_look_points[i].id() = i+cam_pos_points.size();
         cam_look_points[i].init(_pid_point, _pid_point_selection);
     }
 
     cam_look_curve.set_points(cam_look_points[0].position(), cam_look_points[1].position(), cam_look_points[2].position(), cam_look_points[3].position());
-
-
-    ///===================== TODO =====================
-    ///--- TODO H5.3: Set points for cam_look_curve here
-    /// Don't forget to set correct point ids.
-    /// ===============================================
 
   ///--- Setup view-projection matrix
     float ratio = window_width / (float) window_height;
