@@ -11,8 +11,8 @@ enum NAVIGATION_MODE {
     BEZIER
 } navmode;
 
-int window_width = 1024;
-int window_height = 768;
+int window_width = 1300;
+int window_height = 640;
 
 mat4 projection;
 mat4 view;
@@ -116,18 +116,17 @@ void init(){
     cam_look_points.push_back(ControlPoint(0.88, -0.71, 0.62, 1));
     cam_look_points.push_back(ControlPoint(1.3, 0.8, 0.2, 2));
     cam_look_points.push_back(ControlPoint(-0.71, -0.76, -0.2, 3));
+
+    ///===================== TODO =====================
+    ///--- TODO H5.3: Set points for cam_look_curve here
+    /// Don't forget to set correct point ids.
+    /// ===============================================
     for (unsigned int i = 0; i < cam_look_points.size(); i++) {
         cam_look_points[i].id() = i+cam_pos_points.size();
         cam_look_points[i].init(_pid_point, _pid_point_selection);
     }
 
     cam_look_curve.set_points(cam_look_points[0].position(), cam_look_points[1].position(), cam_look_points[2].position(), cam_look_points[3].position());
-
-
-    ///===================== TODO =====================
-    ///--- TODO H5.3: Set points for cam_look_curve here
-    /// Don't forget to set correct point ids.
-    /// ===============================================
 
   ///--- Setup view-projection matrix
     float ratio = window_width / (float) window_height;
@@ -212,9 +211,15 @@ void display(){
         ///--- TODO H5.3: Draw control points for cam_look_curve
         /// ===============================================
 
+
+        for (unsigned int i = 0; i < cam_look_points.size(); i ++) {
+            cam_look_points[i].draw(trackball_matrix * model, view, projection);
+        }
+
         for (unsigned int i = 0; i<bezier_curves.size(); i++) {
             bezier_curves.at(i).draw(trackball_matrix * model, view, projection);
         }
+
         cam_look_curve.draw(trackball_matrix * model, view, projection);
 
         quad.draw(trackball_matrix * model, view, projection);
@@ -238,7 +243,7 @@ void render_selection() {
     ///--- TODO H5.3 Draw control points for cam_look_curve
     ///================================================
     
-    	for (unsigned int i = 0; i < cam_look_points.size(); i++) {
+    for (unsigned int i = 0; i < cam_look_points.size(); i++) {
         cam_look_points[i].draw_selection(trackball_matrix*model, view, projection);
     }
 }
@@ -281,7 +286,7 @@ void selection_button(int button, int action) {
         ///================================================
         
         if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size() + cam_pos_points.size()) {
-            cam_look_points[selected_point- cam_pos_points.size()].selected() = false;
+            cam_look_points[selected_point - cam_pos_points.size()].selected() = false;
         }
 
 
@@ -294,7 +299,9 @@ void selection_button(int button, int action) {
         if (selected_point >= 0 && selected_point < cam_pos_points.size()) {
             unproject(x, y, cam_pos_points[selected_point].position());
 
-            cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
+            for (unsigned int i = 0; (i/3) < bezier_curves.size(); i = i + 3) {
+                bezier_curves.at(i/3).set_points(cam_pos_points[i].position(), cam_pos_points[i+1].position(), cam_pos_points[i+2].position(), cam_pos_points[i+3].position());
+            }
         }
         
         
@@ -305,7 +312,6 @@ void selection_button(int button, int action) {
 
         if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size() + cam_pos_points.size()) {
             unproject(x, y, cam_look_points[selected_point-cam_pos_points.size()].position());
-
             cam_look_curve.set_points(cam_look_points[0].position(), cam_look_points[1].position(), cam_look_points[2].position(), cam_look_points[3].position());
         }
     }
