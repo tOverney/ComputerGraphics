@@ -152,7 +152,7 @@ public:
 		   vec3 v0 = _vertices.at(i);
 		   vec3 v1 = _vertices.at(i+1);
                    float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
-                   sample = a *v1[i+1] + ( 1-a) * v0[i];
+                   sample = a *v1 + ( 1-a) * v0;
      }
 
 

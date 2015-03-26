@@ -188,6 +188,10 @@ void display(){
         ///--- TODO H5.3: Draw control points for cam_look_curve
         /// ===============================================
 
+        for (unsigned int i = 0; i < cam_look_points.size(); i ++) {
+            cam_look_points[i].draw(trackball_matrix * model, view, projection);
+        }
+
         cam_pos_curve.draw(trackball_matrix * model, view, projection);
         cam_look_curve.draw(trackball_matrix * model, view, projection);
 
@@ -212,7 +216,7 @@ void render_selection() {
     ///--- TODO H5.3 Draw control points for cam_look_curve
     ///================================================
     
-    	for (unsigned int i = 0; i < cam_look_points.size(); i++) {
+    for (unsigned int i = 0; i < cam_look_points.size(); i++) {
         cam_look_points[i].draw_selection(trackball_matrix*model, view, projection);
     }
 }
