@@ -94,7 +94,7 @@ void init(){
     cam_look_points.push_back(ControlPoint(0.88, -0.71, 0.62, 1));
     cam_look_points.push_back(ControlPoint(1.3, 0.8, 0.2, 2));
     cam_look_points.push_back(ControlPoint(-0.71, -0.76, -0.2, 3));
- 
+
     ///===================== TODO =====================
     ///--- TODO H5.3: Set points for cam_look_curve here
     /// Don't forget to set correct point ids.
@@ -258,7 +258,7 @@ void selection_button(int button, int action) {
         ///================================================
         
         if (selected_point >= cam_pos_points.size() && selected_point < cam_look_points.size() + cam_pos_points.size()) {
-            cam_look_points[selected_point- cam_pos_points.size()].selected() = false;
+            cam_look_points[selected_point - cam_pos_points.size()].selected() = false;
         }
 
 
