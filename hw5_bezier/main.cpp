@@ -52,11 +52,14 @@ void trackball_pos(int x, int y) {
 Quad quad;
 
 BezierCurve cam_pos_curve;
+BezierCurve cam_pos_curve_scnd;
 BezierCurve cam_look_curve;
 Cube cube;
 
 std::vector<ControlPoint> cam_pos_points;
 std::vector<ControlPoint> cam_look_points;
+std::vector<BezierCurve> bezier_curves;
+int index_last_control_point = 0;
 int selected_point;
 
 void init(){
@@ -77,6 +80,7 @@ void init(){
 
     ///--- init cam_pos_curve
     cam_pos_curve.init(_pid_bezier);
+    bezier_curves.push_back(cam_pos_curve);
     cam_pos_points.push_back(ControlPoint(-0.79, 0.09, 0.2, 0));
     cam_pos_points.push_back(ControlPoint(-0.88, -0.71, 0.2, 1));
     cam_pos_points.push_back(ControlPoint(1.3, -0.8, 0.2, 2));
@@ -84,9 +88,27 @@ void init(){
     for (unsigned int i = 0; i < cam_pos_points.size(); i++) {
         cam_pos_points[i].id() = i;
         cam_pos_points[i].init(_pid_point, _pid_point_selection);
+        index_last_control_point ++;
     }
 
-    cam_pos_curve.set_points(cam_pos_points[0].position(), cam_pos_points[1].position(), cam_pos_points[2].position(), cam_pos_points[3].position());
+    
+    ///--- intit second cam_pos_curve
+    cam_pos_curve_scnd.init(_pid_bezier);
+    bezier_curves.push_back(cam_pos_curve_scnd);
+    cam_pos_points.push_back(ControlPoint(0.8, 0.34, 0.6, 1));
+    cam_pos_points.push_back(ControlPoint(0.4, 0.33, 0.2, 2));
+    cam_pos_points.push_back(ControlPoint(-0.71, -0.76, 0.7, 3));
+    for (unsigned int i = index_last_control_point; i < cam_pos_points.size(); i++) {
+        cam_pos_points[i].id() = i;
+        cam_pos_points[i].init(_pid_point, _pid_point_selection);
+        index_last_control_point++;
+    }
+
+
+    for (unsigned int i = 0; (i/3) < bezier_curves.size(); i = i + 3) {
+        bezier_curves.at(i/3).set_points(cam_pos_points[i].position(), cam_pos_points[i+1].position(), cam_pos_points[i+2].position(), cam_pos_points[i+3].position());
+    }
+
 
     ///--- init cam_look_curve
     cam_look_curve.init(_pid_bezier);
@@ -170,7 +192,9 @@ void display(){
         /// parameter.
         ///================================================
         float time = glfwGetTime()/5;
-        cam_pos_curve.sample_point(time, cam_pos);
+        for(unsigned int i = 0; i<bezier_curves.size(); i++ ) {
+            bezier_curves.at(i).sample_point(time, cam_pos);
+        }
         cam_look_curve.sample_point(time, cam_look);
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
@@ -188,7 +212,9 @@ void display(){
         ///--- TODO H5.3: Draw control points for cam_look_curve
         /// ===============================================
 
-        cam_pos_curve.draw(trackball_matrix * model, view, projection);
+        for (unsigned int i = 0; i<bezier_curves.size(); i++) {
+            bezier_curves.at(i).draw(trackball_matrix * model, view, projection);
+        }
         cam_look_curve.draw(trackball_matrix * model, view, projection);
 
         quad.draw(trackball_matrix * model, view, projection);
