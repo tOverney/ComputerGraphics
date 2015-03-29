@@ -7,6 +7,35 @@ protected:
     GLuint _pid; ///< GLSL shader program ID 
     GLuint _vbo; ///< memory buffer
     GLuint _tex; ///< Texture ID
+    GLuint _mode;
+    float sigma;
+
+private: 
+    void gaussian1D(float sig) {
+
+        GLfloat stdev = sqrt(sig);
+        //GLuint size = 1 + 2 * 3 * int( ceil(stdev) );
+        int size = 5;
+        float filter1D[size];
+        float weight = 0;
+        
+        for (int i = -size; i <= size; i++) {
+            float val = exp(-(i*i)/(2.0*sig));
+            filter1D[i +size] = val;
+            weight += val;
+        }
+
+        for(int i = 0; i <= 2*size + 1; i++) {
+            filter1D[i] /= weight;
+        }
+
+        //GLint size_id = glGetUniformLocation(_pid, "size");
+        //glUniform1ui(size_id, size);
+
+        GLint filter_id = glGetUniformLocation(_pid, "filter1D");
+        glUniform1fv(filter_id, size, filter1D);
+    }
+
 public:
     void init(GLuint texture){ 
         
@@ -64,11 +93,24 @@ public:
         ///--- to avoid the current object being polluted
         glBindVertexArray(0);
         glUseProgram(0);
+
+        ///--- Initialization common variable for control
+        sigma = 2.0f;
     }
        
     void cleanup(){
         // TODO cleanup
     }
+
+    void blurMethod() {
+        GLuint mode_id = glGetUniformLocation(_pid, "mode");
+        glUniform1ui(mode_id,_mode);
+
+        if(_mode == 1) {
+            gaussian1D(sigma);
+        }
+    }
+
     
     void draw(){
         glUseProgram(_pid);
@@ -81,4 +123,9 @@ public:
         glBindVertexArray(0);        
         glUseProgram(0);
     }
+
+    void selectMode(int mode_id) {
+        _mode = mode_id;
+    }
+
 };

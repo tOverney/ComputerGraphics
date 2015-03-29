@@ -48,10 +48,24 @@ void display(){
     squad.draw();
 }
 
+void processKeys(int key, int action) {
+    if(action != GLFW_RELEASE) return; ///< only act on release
+        if(key == '1') {
+            squad.selectMode(1);
+        }
+
+        if(key == '0') {
+            squad.selectMode(0);
+        }
+}
+
+
 int main(int, char**){
     glfwInitWindowSize(width, height);
     glfwCreateWindow();
     glfwDisplayFunc(display);
+    glfwSetKeyCallback(processKeys);
+    processKeys(GLFW_KEY_KP_1, 0);
     init();
     glfwSwapInterval(0); ///< disable VSYNC (allows framerate>30)
     glfwMainLoop();
