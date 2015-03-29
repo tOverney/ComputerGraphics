@@ -77,22 +77,21 @@ private:
         /// Assume piece-wise linear approximation of the curve
         /// http://math.stackexchange.com/questions/12186/arc-length-of-bézier-curves
         ///================================================
-   
-		for(int i = 1 ; i<_vertices.size(); ++i){
-			
-			vec3 v = _vertices.at(i);
-			vec3 v0 = _vertices.at(0);
-			
-			float diffX = v.x()-v0.x();
-			float diffY = v.y()-v0.y();
-			float diffZ = v.z()-v0.z();
-			
-			float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.0));
-			_param.at(i) = distance;
-			}
-			
-   
+
+        for(int i = 1 ; i<_vertices.size(); ++i){
+
+            vec3 v = _vertices.at(i);
+            vec3 v0 = _vertices.at(i-1);
+
+            float diffX = v.x()-v0.x();
+            float diffY = v.y()-v0.y();
+            float diffZ = v.z()-v0.z();
+
+            float distance = sqrt(pow(diffX, 2.0)+pow(diffY, 2.0)+pow(diffZ, 2.0));
+            _param.at(i) = distance + _param.at(i-1);
+        }
     }
+
 public:
     void init(GLuint pid){
         ///--- Set the (compiled) shaders
@@ -128,7 +127,7 @@ public:
         return (a<b);
     }
 
-    void sample_point(double t, vec3 &sample) {
+    void sample_point(double t, vec3& sample) {
         if (_vertices.empty() || _param.empty()) {
             return;
         }
@@ -138,27 +137,25 @@ public:
         /// The distance along the curve from _vertices[0] to sample is
         /// t * curve_length
         ///================================================
-       
-       if(t<=1.0 && t >0.0){
 
-		   float curve_length = _param.at(_param.size()-1);
-		   float cam_dist = t*curve_length;
+        float curve_length = _param.back();
+        float cam_dist = t*curve_length;
 
-		   //cherche les vertices
-		   int i = 0;
-		   while(i<_param.size() && _param.at(_param.size()-1)<cam_dist){
-			   i++;
-		   }
-		   vec3 v0 = _vertices.at(i);
-		   vec3 v1 = _vertices.at(i+1);
-                   float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
-                   sample = a *v1[i+1] + ( 1-a) * v0[i];
-     }
+        //cherche les vertices
+        int i = 1;
+        while(i < _param.size() && _param[_param.size()-1] < cam_dist){
+            i++;
+        }
+        vec3 v0 = _vertices[i-1];
+        vec3 v1 = _vertices[i];
 
+        float a = (cam_dist - _param[i-1])/(_param[i] - _param[i-1]);
+        sample =  a*v1 + (1 - a)*v0;
+    }
 
-     }
-        
-        
+    float getLength() {
+        return _param.back();
+    }
         
   
     
