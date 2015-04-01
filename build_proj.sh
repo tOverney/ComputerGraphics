@@ -6,6 +6,5 @@ fi
 cd build
 cmake ..
 make
-cd $1
+cd ../$1
 ./$1
-cd ../..
