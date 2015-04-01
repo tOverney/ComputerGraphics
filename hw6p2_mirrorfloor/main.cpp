@@ -14,9 +14,12 @@ void init() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     cube.init();    
-    // TODO: initialize framebuffer
+
+	// TODO: initialize framebuffer
+	GLuint fb_tex = fb.init();
+
     // TODO: initialize shinyfloor with the FB texture
-    shinyfloor.init(/*???*/);
+    shinyfloor.init(fb_tex);
 }
 
 void display() {
@@ -32,11 +35,21 @@ void display() {
     mat4 VP = projection * view;
 
     // TODO: mirror the camera position
+	vec3 cam_pos_mirror = (cam_pos.x(), cam_pos.y(), -cam_pos.z());
+	
     // TODO: create new VP for mirrored camera
-    // TODO: render the cube using the mirrored camera
-    // HINT: this render will be done in the framebuffer texture (remember bind/unbind)
+    mat4 view_mirror = Eigen::lookAt(cam_po_mirror, cam_look, cam_up);
+	mar4 VP_mirror = projection * view_mirror;
+
+	// TODO: render the cube using the mirrored camera
+    fb.bind();
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      cube.draw(VP_mirror, glfwGetTime());
+    fb.unbind();
+	// HINT: this render will be done in the framebuffer texture (remember bind/unbind)
     
-    shinyfloor.draw(VP);
+    
+	shinyfloor.draw(VP);
     cube.draw(VP, glfwGetTime()); 
 }
 

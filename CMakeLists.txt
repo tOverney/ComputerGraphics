@@ -28,7 +28,7 @@ include(common/icg_settings.cmake)
 
 #--- Week 6
 #add_subdirectory(lab6_framebuffer)
-add_subdirectory(lab6_framebuffer_SOLUTION)
+#add_subdirectory(lab6_framebuffer_SOLUTION)
 add_subdirectory(hw6p1_fastsmooth)
 add_subdirectory(hw6p2_mirrorfloor)
 add_subdirectory(hw6p3_motionblur)
