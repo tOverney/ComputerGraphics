@@ -36,7 +36,7 @@ void init() {
 
 void display() {
     // The Window freeze eachtime update_title_fps is called, desactivate it for now
-    opengp::update_title_fps("Motion Blur");   
+    //opengp::update_title_fps("Motion Blur");   
     glViewport(0,0,window_width,window_height);
    
     Transform model = Transform::Identity();
