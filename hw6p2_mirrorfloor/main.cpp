@@ -35,11 +35,14 @@ void display() {
     mat4 VP = projection * view;
 
     // TODO: mirror the camera position
-	vec3 cam_pos_mirror = (cam_pos.x(), cam_pos.y(), -cam_pos.z());
+	vec3 cam_pos_mirror = cam_pos;
+	
+	//cam_pos_mirror(2) = cam_pos;
+	cam_pos_mirror[2] = -cam_pos[2];
 	
     // TODO: create new VP for mirrored camera
-    mat4 view_mirror = Eigen::lookAt(cam_po_mirror, cam_look, cam_up);
-	mar4 VP_mirror = projection * view_mirror;
+    mat4 view_mirror = Eigen::lookAt(cam_pos_mirror, cam_look, cam_up);
+	mat4 VP_mirror = projection * view_mirror;
 
 	// TODO: render the cube using the mirrored camera
     fb.bind();
