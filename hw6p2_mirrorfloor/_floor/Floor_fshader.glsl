@@ -18,5 +18,5 @@ void main() {
     /// TODO: mix the texture(tex,uv).rgb with the value you fetch by texture(tex_mirror,vec2(_u,_v)).rgb
 
 	color = mix(texture(tex,uv).rgb, texture(tex_mirror,vec2(_u,_v)).rgb, vec3(0.15)) ;
-    ///color = texture(tex,uv).rgb;
+
 }
