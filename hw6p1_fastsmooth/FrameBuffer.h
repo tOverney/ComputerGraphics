@@ -16,6 +16,7 @@ protected:
     GLuint _fbo;
     GLuint _depth_rb;
     GLuint _color_tex;
+    GLuint _out_tex;
     
 public:
     FrameBuffer(int image_width, int image_height){
@@ -27,11 +28,23 @@ public:
     void bind() {
         glViewport(0, 0, _width, _height);
         glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-        const GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
-        glDrawBuffers(1 /*length of buffers[]*/, buffers);
+        const GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+        glDrawBuffers(2 /*length of buffers[]*/, buffers);
     }
     
     void unbind() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void clear() {
+        glViewport(0, 0, _width, _height);
+        glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+            glDrawBuffer(GL_COLOR_ATTACHMENT0);
+            glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDrawBuffer(GL_COLOR_ATTACHMENT1);
+            glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -42,6 +55,13 @@ public:
             glBindTexture(GL_TEXTURE_2D, _color_tex);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            glGenTextures(1, &_out_tex);
+            glBindTexture(GL_TEXTURE_2D, _color_tex);
+
+            
+
+
     
             if(use_interpolation){
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -53,8 +73,9 @@ public:
             
             ///--- Create texture for the color attachment
             /// See Table.2 https://www.khronos.org/opengles/sdk/docs/man3/docbook4/xhtml/glTexImage2D.xml
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, _width, _height, 0, 
-                         GL_RGB, GL_UNSIGNED_BYTE, NULL); ///< how to load from buffer
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); ///< how to load from buffer
+            glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB8, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
         }
         
         ///--- Create render buffer (for depth channel)
@@ -70,6 +91,7 @@ public:
             glGenFramebuffers(1, &_fbo);
             glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 /*location = 0*/, GL_TEXTURE_2D, _color_tex, 0 /*level*/);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1 /*location = 1*/, GL_TEXTURE_2D, _out_tex, 1 /*level*/);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depth_rb);
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
                 std::cerr << "!!!ERROR: Framebuffer not OK :(" << std::endl;
