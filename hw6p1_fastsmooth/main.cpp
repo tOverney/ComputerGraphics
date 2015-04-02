@@ -35,12 +35,14 @@ void display(){
     mat4 VP = projection * view;
     
     ///--- Render to FB
+    fb.clear();
     fb.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         cube.draw(VP, glfwGetTime());
         quad.draw(VP);
     fb.unbind();
-    // fb.display_color_attachment("FB - Color"); ///< debug
+
+    //fb.display_color_attachment("FB - Color"); ///< debug
 
     ///--- Render to Window
     glViewport(0, 0, width, height);
@@ -50,12 +52,21 @@ void display(){
 
 void processKeys(int key, int action) {
     if(action != GLFW_RELEASE) return; ///< only act on release
-        if(key == '1') {
-            squad.selectMode(1);
-        }
-
         if(key == '0') {
             squad.selectMode(0);
+            std::cout << "non separable mode" << std::endl;
+        }
+        if(key == '1') {
+            squad.selectMode(1);
+            std::cout << "separable mode" << std::endl;
+        }
+
+        if(char(key) == 'Q') {
+            squad.increase_sigma();
+        }
+
+        if(char(key) == 'W') {
+            squad.decrease_sigma();
         }
 }
 
@@ -65,8 +76,8 @@ int main(int, char**){
     glfwCreateWindow();
     glfwDisplayFunc(display);
     glfwSetKeyCallback(processKeys);
-    processKeys(GLFW_KEY_KP_1, 0);
     init();
+    processKeys(GLFW_KEY_KP_1, 0);
     glfwSwapInterval(0); ///< disable VSYNC (allows framerate>30)
     glfwMainLoop();
     return EXIT_SUCCESS;
