@@ -7,33 +7,33 @@ protected:
     GLuint _pid; ///< GLSL shader program ID 
     GLuint _vbo; ///< memory buffer
     GLuint _tex; ///< Texture ID
-    GLuint _mode;
+    GLint _mode;
     float sigma;
 
 private: 
-    void gaussian1D(float sig) {
+    void gaussian1D() {
 
-        GLfloat stdev = sqrt(sig);
-        //GLuint size = 1 + 2 * 3 * int( ceil(stdev) );
-        int size = 5;
-        float filter1D[size];
+        GLfloat stdev = sqrt(sigma);
+        GLint size = 1 + 2 * 3 * int( ceil(stdev) );
+        float filter1D[2*size+1];
         float weight = 0;
         
         for (int i = -size; i <= size; i++) {
-            float val = exp(-(i*i)/(2.0*sig));
+            float val = exp(-(i*i)/(2.0*sigma*sigma));
             filter1D[i +size] = val;
             weight += val;
         }
 
-        for(int i = 0; i <= 2*size + 1; i++) {
+        for(int i = 0; i <= 2*size ; i++) {
             filter1D[i] /= weight;
         }
 
-        //GLint size_id = glGetUniformLocation(_pid, "size");
-        //glUniform1ui(size_id, size);
+        GLint size_id = glGetUniformLocation(_pid, "size");
+        glUniform1i(size_id, size);
 
         GLint filter_id = glGetUniformLocation(_pid, "filter1D");
-        glUniform1fv(filter_id, size, filter1D);
+        glUniform1fv(filter_id,39, filter1D);
+
     }
 
 public:
@@ -94,8 +94,8 @@ public:
         glBindVertexArray(0);
         glUseProgram(0);
 
-        ///--- Initialization common variable for control
         sigma = 2.0f;
+        _mode = 0;
     }
        
     void cleanup(){
@@ -104,19 +104,19 @@ public:
 
     void blurMethod() {
         GLuint mode_id = glGetUniformLocation(_pid, "mode");
-        glUniform1ui(mode_id,_mode);
+        glUniform1i(mode_id,_mode);
 
         if(_mode == 1) {
-            gaussian1D(sigma);
+            gaussian1D();
         }
     }
-
     
     void draw(){
         glUseProgram(_pid);
         glBindVertexArray(_vao);      
             glUniform1f(glGetUniformLocation(_pid, "tex_width"), _width);
-            glUniform1f(glGetUniformLocation(_pid, "tex_height"), _height); 
+            glUniform1f(glGetUniformLocation(_pid, "tex_height"), _height);
+            blurMethod();
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, _tex);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);        
@@ -128,4 +128,21 @@ public:
         _mode = mode_id;
     }
 
+    void increase_sigma(){
+        if(sigma < 9) {
+            sigma += 0.25;
+        } else {
+            std::cout << "Reach max value, sigma block at " << std::endl;
+        }
+        std:cout << "sigma : " << sigma << endl;
+    }
+
+    void decrease_sigma() {
+        if (sigma > 0.25) {
+            sigma -= 0.25;
+        } else {
+            std::cout << "value under 0.25 for sigma non accepted" << endl;
+        }
+        std:cout << "sigma : " << sigma << endl;
+    }
 };
