@@ -18,7 +18,7 @@ mat4 view_matrix;
 mat4 trackball_matrix;
 
 Trackball trackball;
-
+/*
 mat4 OrthographicProjection(float left, float right, float bottom, float top, float near, float far){
     assert(right > left);
     assert(far > near);
@@ -90,6 +90,11 @@ mat4 LookAt(vec3 eye, vec3 center, vec3 up) {
     look_at(3, 3) = 1.0f;
     look_at.block(0, 3, 3, 1) = -R.transpose() * (eye);
     return look_at;
+
+
+
+
+*/
 }
 
 // Gets called when the windows is resized.
@@ -100,14 +105,8 @@ void resize_callback(int width, int height) {
     std::cout << "Window has been resized to " << WIDTH << "x" << HEIGHT << "." << std::endl;
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    // TODO 1: Use a perspective projection instead;
+    projection_matrix = Eigen::Perspective(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
 
-    projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
- /*
-  GLfloat top = 1.0f;
-  GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
-  projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
-*/
 }
 
 void init(){
@@ -120,13 +119,8 @@ void init(){
     // Enable depth test.
     glEnable(GL_DEPTH_TEST);
 
-    // TODO 3: Once you use the trackball, you should use a view matrix that
-    // looks straight down the -z axis. Otherwise the trackball's rotation gets
-    // applied in a rotated coordinate frame.
-    // Uncomment lower line to achieve this.
-    view_matrix = LookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-    //view_matrix = Eigen::Affine3f(Eigen::Translation3f(0.0f, 0.0f, -4.0f)).matrix();
-
+    view_matrix = Eigen::lookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+   
     trackball_matrix = mat4::Identity();
     check_error_gl();
 }
@@ -146,7 +140,6 @@ void display(){
     mat4 cube_trafo = (Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY())) *
                        Eigen::Affine3f(Eigen::Translation3f(vec3(0.75f, 0.0f, 0.0f))) *
                        Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY()))).matrix();
-    //mat4 cube_trafo = Eigen::Affine3f(Eigen::AngleAxisf(time, vec3::UnitY())).matrix();
     mat4 cube_model_matrix = cube_trafo * cube_scale;
 
     cube.draw(trackball_matrix * cube_model_matrix, view_matrix, projection_matrix);
@@ -187,9 +180,6 @@ void mouse_pos(int x, int y) {
     if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         vec2 p = transform_screen_coords(x, y);
         mat4 rotation_drag = trackball.drag(p.x(),p.y());
-        // TODO 3: Cacuclate 'trackball_matrix' given the return value of
-        // trackball.drag(...) and the value stored in 'old_trackball_matrix'.
-        // See also the mouse_button(...) function. 
         trackball_matrix = old_trackball_matrix * rotation_drag;
 
     
