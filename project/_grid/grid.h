@@ -13,7 +13,7 @@ protected:
 public:    
     void init(){
         // Compile the shaders
-        _pid = opengp::load_shaders("grid_vshader.glsl", "grid_fshader.glsl");
+        _pid = opengp::load_shaders("_grid/grid_vshader.glsl", "_grid/grid_fshader.glsl");
         if(!_pid) exit(EXIT_FAILURE);       
         glUseProgram(_pid);
         
@@ -96,7 +96,7 @@ public:
         // Load texture
         glGenTextures(1, &_tex);
         glBindTexture(GL_TEXTURE_2D, _tex);
-        glfwLoadTexture2D("grid_texture.tga", 0);
+        glfwLoadTexture2D("_grid/grid_texture.tga", 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
                 
