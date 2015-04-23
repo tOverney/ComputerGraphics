@@ -27,7 +27,7 @@ public:
             std::vector<GLuint> indices;
             // TODO 5: Make a triangle grid with dimension 100x100.
             // Always two subsequent entries in 'vertices' form a 2D vertex position.
-            int grid_dim = 100;
+            int grid_dim = 512;
 
             /* e.g. a small grid will be numbered as such in vertices:
                 2 1 0
@@ -134,7 +134,7 @@ public:
         // Draw
         // TODO 5: For debugging it can be helpful to draw only the wireframe.
         // You can do that by uncommenting the next line.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         // TODO 5: Depending on how you set up your vertex index buffer, you
         // might have to change GL_TRIANGLE_STRIP to GL_TRIANGLES.
         glDrawElements(GL_TRIANGLE_STRIP, _num_indices, GL_UNSIGNED_INT, 0);
