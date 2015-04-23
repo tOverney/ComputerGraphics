@@ -1,5 +1,5 @@
 #include "icg_common.h"
-#include "cube.h"
+//#include "cube.h"
 #include "trackball.h"
 #include "_grid/grid.h"
 
@@ -7,11 +7,11 @@ typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
 using namespace std;
 
-Cube cube;
+//Cube cube;
 Grid grid;
 
-int WIDTH = 800;
-int HEIGHT = 600;
+int WIDTH = 1680;
+int HEIGHT = 1001;
 
 mat4 projection_matrix;
 mat4 view_matrix;
@@ -103,18 +103,13 @@ void resize_callback(int width, int height) {
     // TODO 1: Use a perspective projection instead;
 
     projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
- /*
-  GLfloat top = 1.0f;
-  GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
-  projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
-*/
 }
 
 void init(){
     // Sets background color.
     glClearColor(/*gray*/ .937,.937,.937, /*solid*/1.0);
     
-    cube.init();
+    //cube.init();
     grid.init();
 
     // Enable depth test.
@@ -137,19 +132,19 @@ void display(){
 
 
     // Scaling matrix to scale the cube down to a reasonable size.
-    mat4 cube_scale;
-    cube_scale << 0.25f, 0.0f,  0.0f,  0.0f,
-                  0.0f,  0.25f, 0.0f,  0.0f,
-                  0.0f,  0.0f,  0.25f, 0.0f,
-                  0.0f,  0.0f,  0.0f,  1.0f;
+    // mat4 cube_scale;
+    // cube_scale << 0.25f, 0.0f,  0.0f,  0.0f,
+    //               0.0f,  0.25f, 0.0f,  0.0f,
+    //               0.0f,  0.0f,  0.25f, 0.0f,
+    //               0.0f,  0.0f,  0.0f,  1.0f;
     const float time = glfwGetTime();
-    mat4 cube_trafo = (Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY())) *
-                       Eigen::Affine3f(Eigen::Translation3f(vec3(0.75f, 0.0f, 0.0f))) *
-                       Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY()))).matrix();
-    //mat4 cube_trafo = Eigen::Affine3f(Eigen::AngleAxisf(time, vec3::UnitY())).matrix();
-    mat4 cube_model_matrix = cube_trafo * cube_scale;
+    // mat4 cube_trafo = (Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY())) *
+    //                    Eigen::Affine3f(Eigen::Translation3f(vec3(0.75f, 0.0f, 0.0f))) *
+    //                    Eigen::Affine3f(Eigen::AngleAxisf(2.0f * time, vec3::UnitY()))).matrix();
+    // //mat4 cube_trafo = Eigen::Affine3f(Eigen::AngleAxisf(time, vec3::UnitY())).matrix();
+    // mat4 cube_model_matrix = cube_trafo * cube_scale;
 
-    cube.draw(trackball_matrix * cube_model_matrix, view_matrix, projection_matrix);
+    // cube.draw(trackball_matrix * cube_model_matrix, view_matrix, projection_matrix);
 
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
