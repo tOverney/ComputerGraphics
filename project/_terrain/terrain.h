@@ -8,10 +8,11 @@ protected:
     GLuint _vbo_index;    ///< memory buffer for indice
     GLuint _pid;          ///< GLSL shader program ID
     GLuint _tex;          ///< Texture ID
+    GLuint _height_map;   ///< Texture ID of the height map
     GLuint _num_indices;  ///< number of vertices to render
     
 public:    
-    void init(){
+    void init(GLuint height_map = -1){
         // Compile the shaders
         _pid = opengp::load_shaders("_terrain/terrain_vshader.glsl", "_terrain/terrain_fshader.glsl");
         if(!_pid) exit(EXIT_FAILURE);       
@@ -99,13 +100,17 @@ public:
         glfwLoadTexture2D("_terrain/terrain_texture.tga", 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        _height_map = (height_map == -1) ? _tex : height_map;
                 
         // Texture uniforms
         GLuint tex_id = glGetUniformLocation(_pid, "tex");
         glUniform1i(tex_id, 0 /*GL_TEXTURE0*/);
+        GLuint height_map_id = glGetUniformLocation(_pid, "height_map");
+        glUniform1i(height_map_id, 1 /*GL_TEXTURE1*/);
         
         // to avoid the current object being polluted
         glBindVertexArray(0);
+        glUseProgram(0);
     }
            
     void cleanup(){
@@ -122,6 +127,9 @@ public:
         // Bind textures
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _tex);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, _height_map);
 
         // Setup MVP
         mat4 MVP = projection*view*model;

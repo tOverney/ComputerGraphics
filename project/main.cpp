@@ -1,5 +1,5 @@
 #include "icg_common.h"
-
+#include "FrameBuffer.h"
 #include "_terrain/terrain.h"
 
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
