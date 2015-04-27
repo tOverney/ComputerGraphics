@@ -1,6 +1,7 @@
 #include "icg_common.h"
 #include "FrameBuffer.h"
 #include "_terrain/terrain.h"
+#include "_quad/quad.h"
 
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
@@ -14,6 +15,7 @@ double y_0;
 
 FrameBuffer fb(WIDTH, HEIGHT);
 Terrain terrain;
+Quad quad;
 
 
 // Gets called when the windows is resized.
@@ -41,6 +43,7 @@ void init(){
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
     terrain.init(fb_tex);
+    quad.init();
 
     check_error_gl();
 }
@@ -53,7 +56,8 @@ void display(){
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(
         Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
-    terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
+    //terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
+    quad.draw();
 
     check_error_gl();
 
