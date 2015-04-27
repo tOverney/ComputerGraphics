@@ -1,10 +1,10 @@
 #include "icg_common.h"
 
-#include "_grid/grid.h"
+#include "_terrain/terrain.h"
 
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
-Grid grid;
+Terrain terrain;
 
 int WIDTH = 1680;
 int HEIGHT = 1001;
@@ -33,7 +33,7 @@ void init(){
     // Sets background color.
     glClearColor(/*gray*/ .937,.937,.937, /*solid*/1.0);
  
-    grid.init();
+
 
     // Enable depth test.
     glEnable(GL_DEPTH_TEST);
@@ -43,7 +43,7 @@ void init(){
 
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
-
+    terrain.init(fb_tex);
 
 
 
@@ -59,7 +59,7 @@ void display(){
 
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
-    grid.draw(quad_model_matrix, view_matrix, projection_matrix, time);
+    terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
 
     check_error_gl();
 
