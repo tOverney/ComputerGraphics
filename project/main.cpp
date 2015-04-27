@@ -1,13 +1,9 @@
 #include "icg_common.h"
-//#include "cube.h"
-#include "trackball.h"
+
 #include "_grid/grid.h"
 
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
-using namespace std;
-
-//Cube cube;
 Grid grid;
 
 int WIDTH = 1680;
@@ -15,11 +11,10 @@ int HEIGHT = 1001;
 
 mat4 projection_matrix;
 mat4 view_matrix;
-mat4 trackball_matrix;
+
 
 FrameBuffer fb(WIDTH, HEIGHT);
 
-Trackball trackball;
 
 
 // Gets called when the windows is resized.
@@ -37,8 +32,7 @@ void resize_callback(int width, int height) {
 void init(){
     // Sets background color.
     glClearColor(/*gray*/ .937,.937,.937, /*solid*/1.0);
-    
-    //cube.init();
+ 
     grid.init();
 
     // Enable depth test.
@@ -46,12 +40,13 @@ void init(){
 
     view_matrix = Eigen::lookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 
+
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
 
 
 
-    trackball_matrix = mat4::Identity();
+
     check_error_gl();
 }
 
@@ -64,7 +59,7 @@ void display(){
 
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
-    grid.draw(trackball_matrix * quad_model_matrix, view_matrix, projection_matrix, time);
+    grid.draw(quad_model_matrix, view_matrix, projection_matrix, time);
 
     check_error_gl();
 
@@ -80,13 +75,7 @@ mat4 old_trackball_matrix;
 double y_o;
 
 void mouse_button(int button, int action) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        int x_i, y_i;
-        glfwGetMousePos(&x_i, &y_i);
-        vec2 p = transform_screen_coords(x_i, y_i);
-        trackball.begin_drag(p.x(), p.y());
-        old_trackball_matrix = trackball_matrix;  // Store the current state of the model matrix.
-    }else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         int x_i, y_i;
         glfwGetMousePos(&x_i, &y_i);
         vec2 p = transform_screen_coords(x_i, y_i);
@@ -95,14 +84,6 @@ void mouse_button(int button, int action) {
 }
 
 void mouse_pos(int x, int y) {
-    if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        vec2 p = transform_screen_coords(x, y);
-        mat4 rotation_drag = trackball.drag(p.x(),p.y());
-        trackball_matrix = old_trackball_matrix * rotation_drag;
-
-    
-
-    }
 
     // Zoom
     if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
@@ -124,7 +105,7 @@ void mouse_pos(int x, int y) {
 
 int main(int, char**){
     glfwInitWindowSize(WIDTH, HEIGHT);
-    glfwCreateWindow("Project");
+    glfwCreateWindow("MyLittleTerrain");
     glfwDisplayFunc(display);
     glfwSetWindowSizeCallback(&resize_callback);
     glfwSetMouseButtonCallback(mouse_button);
