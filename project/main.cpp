@@ -93,9 +93,9 @@ mat4 LookAt(vec3 eye, vec3 center, vec3 up) {
 
 
 
-
-*/
 }
+*/
+
 
 // Gets called when the windows is resized.
 void resize_callback(int width, int height) {
@@ -105,7 +105,7 @@ void resize_callback(int width, int height) {
     std::cout << "Window has been resized to " << WIDTH << "x" << HEIGHT << "." << std::endl;
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    projection_matrix = Eigen::Perspective(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
+    projection_matrix = Eigen::perspective(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
 
 }
 
