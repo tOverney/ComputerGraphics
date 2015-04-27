@@ -17,84 +17,9 @@ mat4 projection_matrix;
 mat4 view_matrix;
 mat4 trackball_matrix;
 
+FrameBuffer fb(WIDTH, HEIGHT);
+
 Trackball trackball;
-/*
-mat4 OrthographicProjection(float left, float right, float bottom, float top, float near, float far){
-    assert(right > left);
-    assert(far > near);
-    assert(top > bottom);
-    mat4 ortho = mat4::Zero();
-    ortho(0, 0) = 2.0f / (right - left);
-    ortho(1, 1) = 2.0f / (top - bottom);
-    ortho(2, 2) = -2.0f / (far - near);
-    ortho(3, 3) = 1.0f;
-    ortho(0, 3) = -(right + left) / (right - left);
-    ortho(1, 3) = -(top + bottom) / (top - bottom);
-    ortho(2, 3) = -(far + near) / (far - near);
-
-    return ortho;
-}
-
-mat4 PerspectiveProjection(float fovy, float aspect, float near, float far){
-
-    // TODO 1: Create a perspective projection matrix given the field of view,
-    // aspect ratio, and near and far plane distances.
-    
- 
-    assert(far > near);
-    
-    float f= 1 / tan((fovy/2)*M_PI/180.0);
-    float a11 = f/(aspect);
-    float a22 = f;
-    float a33 = (near + far)/(near-far);
-    float a34 = 2*far*near/(near-far);
-    float a43 = -1.0f;
-    
-   mat4 projection;
-    projection << a11, 0, 0, 0,
-                  0, a22, 0, 0,
-                  0, 0, a33, a34,
-                  0, 0, a43, 0;
-    
-    //mat4 projection = mat4::Identity();
-    return projection;
-}
-
-mat4 LookAt(vec3 eye, vec3 center, vec3 up) {
-    // We need a function that converts from world coordinates into camera coordiantes.
-    //
-    // Cam coords to world coords is given by:
-    // X_world = R * X_cam + eye
-    //
-    // inverting it leads to:
-    //
-    // X_cam = R^T * X_world - R^T * eye
-    //
-    // Or as a homogeneous matrix:
-    // [ r_00 r_10 r_20 -r_0*eye
-    //   r_01 r_11 r_21 -r_1*eye
-    //   r_02 r_12 r_22 -r_2*eye
-    //      0    0    0        1 ]
-
-    vec3 z_cam = (eye - center).normalized();
-    vec3 x_cam = up.cross(z_cam).normalized();
-    vec3 y_cam = z_cam.cross(x_cam);
-
-    mat3 R;
-    R.col(0) = x_cam;
-    R.col(1) = y_cam;
-    R.col(2) = z_cam;
-
-    mat4 look_at = mat4::Zero();
-    look_at.block(0, 0, 3, 3) = R.transpose();
-    look_at(3, 3) = 1.0f;
-    look_at.block(0, 3, 3, 1) = -R.transpose() * (eye);
-    return look_at;
-
-
-
-}
-*/
 
 
 // Gets called when the windows is resized.
@@ -120,7 +45,12 @@ void init(){
     glEnable(GL_DEPTH_TEST);
 
     view_matrix = Eigen::lookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-   
+
+    // TODO: initialize framebuffer
+    GLuint fb_tex = fb.init();
+
+
+
     trackball_matrix = mat4::Identity();
     check_error_gl();
 }
@@ -194,7 +124,7 @@ void mouse_pos(int x, int y) {
 
 int main(int, char**){
     glfwInitWindowSize(WIDTH, HEIGHT);
-    glfwCreateWindow("Trackball");
+    glfwCreateWindow("Project");
     glfwDisplayFunc(display);
     glfwSetWindowSizeCallback(&resize_callback);
     glfwSetMouseButtonCallback(mouse_button);
