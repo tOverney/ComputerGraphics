@@ -31,7 +31,6 @@ float mix(float x, float y, float alpha){
 
 void main() {
     vec2 cell = uv * GRID_SIZE;
-   // float color_val = colors[int(cell.x)][int(cell.y)];
 
     //Find celle that contains the point
     int cellRow = int(cell.y);
@@ -51,12 +50,11 @@ void main() {
     vec2 cp = op - vec2(0,1);
     vec2 dp = op - vec2(1,1);
 
+    //scalar value for each corner
     float s = dot(g00, ap);
-    float t = dot(g10,bp);
+    float t = dot(g10, bp);
     float u = dot(g01, cp);
     float v = dot(g11, dp);
-
-
 
     float st = mix(s,t,interpolationFunction(cell.x));
     float uv2 = mix(u, v, interpolationFunction(cell.x));
