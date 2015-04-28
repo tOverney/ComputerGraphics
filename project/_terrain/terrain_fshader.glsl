@@ -1,7 +1,10 @@
 #version 330 core
 out vec3 color;
 in vec2 uv;
+in vec3 normale;
 in float height_v;
+uniform vec3 Ia, Id, Is;
+uniform vec3 ka, kd, ks;
 uniform sampler2D tex;
 
 void main() {

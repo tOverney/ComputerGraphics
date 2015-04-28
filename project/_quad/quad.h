@@ -2,12 +2,17 @@
 #include "icg_common.h"
 #include <cstdlib>
 
-class Quad{
+
+
+
+class Quad {
 protected:
     GLuint _vao; ///< vertex array object
     GLuint _pid; ///< GLSL shader program ID 
     GLuint _vbo; ///< memory buffer
     GLuint _tex; ///< Texture ID
+
+
     
 public:    
     void init(){
