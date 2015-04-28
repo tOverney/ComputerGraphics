@@ -36,16 +36,6 @@ public:
             glEnableVertexAttribArray(vpoint_id);
             glVertexAttribPointer(vpoint_id, 3, GL_FLOAT, DONT_NORMALIZE, ZERO_STRIDE, ZERO_BUFFER_OFFSET);
         }
-
-        {
-            GLfloat randcolor[2*2];
-            for(int i = 0; i <= 4; i++) {
-                randcolor[i] = rand();
-            }
-
-            GLuint color_pos = glGetUniformLocation(_pid, "colors");
-            glUniform3fv(color_pos, 2, randcolor);
-        }
         
         ///--- Texture coordinates
         {
@@ -64,7 +54,7 @@ public:
             glEnableVertexAttribArray(vtexcoord_id);
             glVertexAttribPointer(vtexcoord_id, 2, GL_FLOAT, DONT_NORMALIZE, ZERO_STRIDE, ZERO_BUFFER_OFFSET);
         }
-        
+
 
         ///--- to avoid the current object being polluted
         glBindVertexArray(0);

@@ -42,9 +42,15 @@ void init(){
 
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
-    terrain.init(fb_tex);
     quad.init();
 
+    fb.bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        quad.draw();
+    fb.unbind();
+
+
+    terrain.init(fb_tex);
     check_error_gl();
 }
 
@@ -56,8 +62,8 @@ void display(){
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(
         Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
-    //terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
-    quad.draw();
+    terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
+    
 
     check_error_gl();
 
