@@ -46,7 +46,7 @@ float fbm(vec2 x) {
 
 void main() {
 
-    float noise = 1.5 *(fbm(5 *uv) + fbm(10 * uv) + fbm(2 * uv))/3;
+    float noise = (fbm(5 *uv) + fbm(10 * uv) + fbm(2 * uv))/2;
 
     color = vec3(noise,noise,noise);
 }
