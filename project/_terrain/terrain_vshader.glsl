@@ -6,6 +6,7 @@ uniform sampler2D height_map;
 
 in vec2 position;
 
+out vec2 uv;
 out vec3 normal;
 out vec3 light_dir;
 out float height_v;
@@ -33,7 +34,7 @@ vec3 compute_normal(vec2 uv, float h) {
 }
 
 void main() {
-    vec2 uv = (position + vec2(1, 1))/2;
+    uv = (position + vec2(1, 1))/2;
     float height = texture(height_map, uv).r;
 
     normal = compute_normal(uv, height);

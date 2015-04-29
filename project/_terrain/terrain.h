@@ -7,7 +7,7 @@ protected:
     GLuint _vbo_position; ///< memory buffer for positions
     GLuint _vbo_index;    ///< memory buffer for indice
     GLuint _pid;          ///< GLSL shader program ID
-    GLuint _tex;          ///< Texture ID
+    GLuint _snow, _grass, _rock, _sand;    ///< Texture ID
     GLuint _height_map;   ///< Texture ID of the height map
     GLuint _num_indices;  ///< number of vertices to render
     
@@ -83,18 +83,43 @@ public:
         }
         
         // Load texture
-        glGenTextures(1, &_tex);
-        glBindTexture(GL_TEXTURE_2D, _tex);
-        glfwLoadTexture2D("_terrain/terrain_texture.tga", 0);
+        glGenTextures(1, &_snow);
+        glBindTexture(GL_TEXTURE_2D, _snow);
+        glfwLoadTexture2D("_terrain/seamless_snow.tga", 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        _height_map = (height_map == -1) ? _tex : height_map;
+
+        glGenTextures(1, &_grass);
+        glBindTexture(GL_TEXTURE_2D, _grass);
+        glfwLoadTexture2D("_terrain/seamless_grass.tga", 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        glGenTextures(1, &_rock);
+        glBindTexture(GL_TEXTURE_2D, _rock);
+        glfwLoadTexture2D("_terrain/seamless_rock.tga", 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        glGenTextures(1, &_sand);
+        glBindTexture(GL_TEXTURE_2D, _sand);
+        glfwLoadTexture2D("_terrain/seamless_sand.tga", 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        _height_map = (height_map == -1) ? _rock : height_map;
                 
         // Texture uniforms
-        GLuint tex_id = glGetUniformLocation(_pid, "tex");
-        glUniform1i(tex_id, 0 /*GL_TEXTURE0*/);
         GLuint height_map_id = glGetUniformLocation(_pid, "height_map");
-        glUniform1i(height_map_id, 1 /*GL_TEXTURE1*/);
+        glUniform1i(height_map_id, 0 /*GL_TEXTURE0*/);
+        GLuint snow_id = glGetUniformLocation(_pid, "seamless_snow");
+        glUniform1i(snow_id, 1 /*GL_TEXTURE1*/);
+        GLuint grass_id = glGetUniformLocation(_pid, "seamless_grass");
+        glUniform1i(grass_id, 2 /*GL_TEXTURE2*/);
+        GLuint rock_id = glGetUniformLocation(_pid, "seamless_rock");
+        glUniform1i(rock_id, 3 /*GL_TEXTURE3*/);
+        GLuint sand_id = glGetUniformLocation(_pid, "seamless_sand");
+        glUniform1i(sand_id, 4 /*GL_TEXTURE4*/);
         
         // to avoid the current object being polluted
         glBindVertexArray(0);
@@ -106,7 +131,10 @@ public:
         glDeleteBuffers(1, &_vbo_index);
         glDeleteVertexArrays(1, &_vao);
         glDeleteProgram(_pid);
-        glDeleteTextures(1, &_tex);
+        glDeleteTextures(1, &_height_map);
+        glDeleteTextures(1, &_snow);
+        glDeleteTextures(1, &_grass);
+        glDeleteTextures(1, &_rock);
     }
     
     void draw(const mat4& model, const mat4& view, const mat4& projection, float time){
@@ -114,10 +142,19 @@ public:
         glBindVertexArray(_vao);
         // Bind textures
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, _tex);
+        glBindTexture(GL_TEXTURE_2D, _height_map);
 
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, _height_map);
+        glBindTexture(GL_TEXTURE_2D, _snow);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, _grass);
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, _rock);
+
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, _sand);
 
         // Setup MVP
         mat4 MV = view*model;
