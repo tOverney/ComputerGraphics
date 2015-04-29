@@ -11,7 +11,7 @@ out vec3 light_dir;
 out float height_v;
 
 
-vec3 light_pos =  vec3(0.0f, -1.0f, 0.01f);
+vec3 light_pos =  vec3(0.0f, 0.5f, 0.5f);
 float offset = 1.0/512;
 
 vec3 compute_normal(vec2 uv, float h) {
@@ -42,5 +42,5 @@ void main() {
     vec3 pos_3d = vec3(position.x, height, -position.y);
     vec4 point_mv = model_view * vec4(pos_3d, 1.0);
     gl_Position = projection * point_mv;
-    light_dir = normalize(light_pos - point_mv.xyz);
+    light_dir = normalize(light_pos);
 }
