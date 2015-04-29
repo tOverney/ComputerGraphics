@@ -38,7 +38,7 @@ void init(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 
-    view_matrix = Eigen::lookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = Eigen::lookAt(vec3(0.9f, 0.9f, 1.8f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
