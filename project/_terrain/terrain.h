@@ -120,9 +120,13 @@ public:
         glBindTexture(GL_TEXTURE_2D, _height_map);
 
         // Setup MVP
-        mat4 MVP = projection*view*model;
-        GLuint MVP_id = glGetUniformLocation(_pid, "mvp");
-        glUniformMatrix4fv(MVP_id, 1, GL_FALSE, MVP.data());
+        mat4 MV = view*model;
+        GLuint MV_id = glGetUniformLocation(_pid, "model_view");
+        glUniformMatrix4fv(MV_id, 1, GL_FALSE, MV.data());
+
+        mat4 P = projection;
+        GLuint P_id = glGetUniformLocation(_pid, "projection");
+        glUniformMatrix4fv(P_id, 1, GL_FALSE, P.data());
 
         // Pass the current time stamp to the shader.
         glUniform1f(glGetUniformLocation(_pid, "time"), time);
