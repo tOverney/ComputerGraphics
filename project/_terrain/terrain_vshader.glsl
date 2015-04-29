@@ -14,10 +14,10 @@ out float height_v;
 vec3 light_pos =  vec3(0.0f, 1.0f, 0.01f);
 
 vec3 compute_normal(vec2 position) {
-    vec2 uva = (position + vec2(1.0, 0.0)) * 0.5;
-    vec2 uvb = (position + vec2(0.0, 1.0))* 0.5;
-    vec2 uvc = (position + vec2(1.0, 0.0))* 0.5;
-    vec2 uvd = (position + vec2(1.0, 1.0))* 0.5;
+    vec2 uva = (position + vec2(1.0, 0.0));
+    vec2 uvb = (position + vec2(0.0, 1.0));
+    vec2 uvc = (position + vec2(1.0, 0.0));
+    vec2 uvd = (position + vec2(1.0, 1.0));
 
     float ha = texture(height_map, uva).r;
     float hb = texture(height_map, uvb).r;

@@ -1,50 +1,7 @@
 #pragma once
 #include "icg_common.h"
 
-struct Light{
-    vec3 Ia = vec3(1.0f, 1.0f, 1.0f);
-    vec3 Id = vec3(1.0f, 1.0f, 1.0f);
-    vec3 Is = vec3(1.0f, 1.0f, 1.0f);
-
-    vec3 light_pos =  vec3(0.0f, 0.0f, 0.01f);
-
-    ///--- Pass light properties to the shader
-    void setup(GLuint _pid){
-        glUseProgram(_pid);
-        GLuint light_pos_id = glGetUniformLocation(_pid, "light_pos"); //Given in camera space
-        GLuint Ia_id = glGetUniformLocation(_pid, "Ia");
-        GLuint Id_id = glGetUniformLocation(_pid, "Id");
-        GLuint Is_id = glGetUniformLocation(_pid, "Is");
-        glUniform3fv(light_pos_id, ONE, light_pos.data());
-        glUniform3fv(Ia_id, ONE, Ia.data());
-        glUniform3fv(Id_id, ONE, Id.data());
-        glUniform3fv(Is_id, ONE, Is.data());
-    }
-
-
-};
-
-struct Material{
-    vec3 ka = vec3(0.18f, 0.1f, 0.1f);
-    vec3 kd = vec3(0.9f, 0.5f, 0.5f);
-    vec3 ks = vec3(0.8f, 0.8f, 0.8f);
-    float p = 60.0f;
-
-    ///--- Pass material properties to the shaders
-    void setup(GLuint _pid){
-        glUseProgram(_pid);
-        GLuint ka_id = glGetUniformLocation(_pid, "ka");
-        GLuint kd_id = glGetUniformLocation(_pid, "kd");
-        GLuint ks_id = glGetUniformLocation(_pid, "ks");
-        GLuint p_id = glGetUniformLocation(_pid, "p");
-        glUniform3fv(ka_id, ONE, ka.data());
-        glUniform3fv(kd_id, ONE, kd.data());
-        glUniform3fv(ks_id, ONE, ks.data());
-        glUniform1f(p_id, p);
-    }
-};
-
-class Terrain : public Material, public Light{
+class Terrain {
 protected:
     GLuint _vao;          ///< vertex array object
     GLuint _vbo_position; ///< memory buffer for positions
@@ -106,18 +63,6 @@ public:
             // The given code below are the vertices for a simple quad.
             // Your grid should have the same dimension as that quad, i.e.,
             // reach from [-1, -1] to [1, 1].
-
-            // Vertex position of the triangles.
-            // vertices.push_back(-1.0f); vertices.push_back( 1.0f);
-            // vertices.push_back( 1.0f); vertices.push_back( 1.0f);
-            // vertices.push_back( 1.0f); vertices.push_back(-1.0f);
-            // vertices.push_back(-1.0f); vertices.push_back(-1.0f);
-
-            // And indices.
-            // indices.push_back(0);
-            // indices.push_back(1);
-            // indices.push_back(3);
-            // indices.push_back(2);
 
             _num_indices = indices.size();
 
@@ -181,9 +126,6 @@ public:
 
         // Pass the current time stamp to the shader.
         glUniform1f(glGetUniformLocation(_pid, "time"), time);
-
-        Material::setup(_pid);
-        Light::setup(_pid);
 
         // Draw
         // TODO 5: For debugging it can be helpful to draw only the wireframe.
