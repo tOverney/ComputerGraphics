@@ -14,9 +14,6 @@ uniform sampler2D seamless_sand;
 
 vec3 Id = vec3(1.0f, 1.0f, 1.0f);
 vec3 Ia = vec3(0.1f, 0.1f, 0.1f);
-vec3 green = vec3(0, 1, 0);
-vec3 yellow = vec3(1, 1, 0);
-vec3 white = vec3(1, 1, 1);
 
 vec3 ambient_shading(vec3 in_color) {
     return Ia * in_color;
@@ -33,15 +30,28 @@ vec3 shading(vec3 in_color) {
 
 void main() {
 
-    float yellow_amount = (height_v <= 0.35) ? 1 - height_v : 0.0;
-    float white_amount = clamp((height_v >= 0.64) ? height_v + 0.2 : 0.0, 0, 1);
-    white_amount = (height_v >= 0.69) ? white_amount * 1.2 : white_amount;
-    float green_amount = clamp(1 - (yellow_amount + white_amount), 0, 1);
+    float a_sand = (height_v <= 0.35) ? 1.0 - height_v : 0.0;
+    float a_snow = clamp((height_v >= 0.64) ? height_v + 0.2 : 0.0, 0, 1);
+    float a_rock = 0;
+    a_snow = clamp((height_v >= 0.69) ? a_snow * 1.2 : a_snow, 0, 1);
+    float a_grass = clamp(1 - (a_sand + a_snow), 0, 1);
 
 
-    vec3 raw_color = texture(seamless_sand, 100*uv).rgb * yellow_amount +
-                     texture(seamless_snow, 200*uv).rgb * white_amount +
-                     texture(seamless_grass, 100*uv).rgb * green_amount;
 
-    color = /*(normal_mv + vec3(1.0, 1.0, 1.0))/2; //*/shading(raw_color);
+        a_snow = 0.0;
+        a_sand = clamp(exp(-pow(height_v,2)/3), 0,1);
+        a_rock = clamp(exp(-pow(height_v-6,2)/2),0,1);
+        a_grass = 0.0;
+
+
+
+
+
+
+    vec3 raw_color = texture(seamless_sand, 100*uv).rgb * a_sand +
+                     texture(seamless_snow, 200*uv).rgb * a_snow +
+                     texture(seamless_grass, 100*uv).rgb * a_grass+
+                     texture(seamless_rock, 100*uv).rgb * a_rock;
+
+    color = /*vec3( height_v, height_v, height_v); /*(normal_mv + vec3(1.0, 1.0, 1.0))/2; //*/shading(raw_color);
 }
