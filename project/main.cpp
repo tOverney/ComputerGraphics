@@ -17,6 +17,11 @@ FrameBuffer fb(WIDTH, HEIGHT);
 Terrain terrain;
 Quad quad;
 
+vec3 eye = vec3(0.9f, 0.9f, 1.8f);
+vec3 center = vec3(0.0f, 0.0f, 0.0f);
+vec3 up = vec3(0.0f, 1.0f, 0.0f);
+float step = 0.1f;
+
 
 // Gets called when the windows is resized.
 void resize_callback(int width, int height) {
@@ -38,7 +43,7 @@ void init(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 
-    view_matrix = Eigen::lookAt(vec3(0.9f, 0.9f, 1.8f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = Eigen::lookAt(eye, center, up);
 
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
@@ -102,6 +107,43 @@ void mouse_pos(int x, int y) {
     }
 }
 
+void keyboard(int key, int action){
+    if(action != GLFW_RELEASE) return; ///< only act on release
+
+    switch(key){
+        // up
+        case 283:
+        eye.z() = eye.z() + step;
+        center.z() = center.z() + step;
+        break;
+        //left
+        case 286:
+            eye.x() = eye.x() + step;
+
+            center.x() = center.x() + step;
+            break;
+        //down
+        case 284:
+        eye.z() = eye.z() - step;
+
+        center.z() = center.z() - step;
+            break;
+
+        case 285:
+        //right
+        eye.x() = eye.x() - step;
+
+        center.x() = center.x() - step;
+            break;
+
+        default:
+            break;
+    }
+    view_matrix = Eigen::lookAt(eye, center, up);
+}
+
+
+
 int main(int, char**){
     glfwInitWindowSize(WIDTH, HEIGHT);
     glfwCreateWindow("MyLittleTerrain");
@@ -109,6 +151,7 @@ int main(int, char**){
     glfwSetWindowSizeCallback(&resize_callback);
     glfwSetMouseButtonCallback(mouse_button);
     glfwSetMousePosCallback(mouse_pos);
+    glfwSetKeyCallback(keyboard);
     init();
     glfwMainLoop();
     return EXIT_SUCCESS;
