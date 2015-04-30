@@ -33,8 +33,8 @@ vec3 shading(vec3 in_color) {
 
 void main() {
 
-    float yellow_amount = (height_v <= 0.35) ? 1 - height_v : 0;
-    float white_amount = clamp((height_v >= 0.64) ? height_v + 0.2 : 0, 0, 1);
+    float yellow_amount = (height_v <= 0.35) ? 1 - height_v : 0.0;
+    float white_amount = clamp((height_v >= 0.64) ? height_v + 0.2 : 0.0, 0, 1);
     white_amount = (height_v >= 0.69) ? white_amount * 1.2 : white_amount;
     float green_amount = clamp(1 - (yellow_amount + white_amount), 0, 1);
 
