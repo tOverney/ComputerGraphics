@@ -111,26 +111,26 @@ void keyboard(int key, int action){
     if(action != GLFW_RELEASE) return; ///< only act on release
 
     switch(key){
-        // up
-        case 283:
+        // down
+        case 284:
         eye.z() = eye.z() + step;
         center.z() = center.z() + step;
         break;
-        //left
+        //right
         case 286:
             eye.x() = eye.x() + step;
 
             center.x() = center.x() + step;
             break;
-        //down
-        case 284:
+        //up
+        case 283:
         eye.z() = eye.z() - step;
 
         center.z() = center.z() - step;
             break;
 
         case 285:
-        //right
+        //left
         eye.x() = eye.x() - step;
 
         center.x() = center.x() - step;
