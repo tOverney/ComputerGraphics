@@ -1,18 +1,18 @@
-#### TODO List
+# TODO List
 
-# Height map
+## Height map
 * less 'spiky' world
 
-# Textures
+## Textures
 * Have them blend in a nice way
 * add rocks
 
-# Water
+## Water
 * add the water plan
 * have the depth account for the water color
 * add ripples of the surface
 
-# Camera movements
+## Camera movements
 * keep moving as long as the key is pressed down instead of the release.
 * move based on the direction you look at.
 * 'F' let you go in 'free camera mode'

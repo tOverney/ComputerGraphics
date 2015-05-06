@@ -1,6 +1,7 @@
 #version 330 core
 
 const int GRID_SIZE = 512;
+const int NB_OCTAVE = 10;
 const int NB_CELLS = GRID_SIZE * GRID_SIZE;
 
 out vec3 color;
@@ -30,14 +31,14 @@ float noise(vec2 p){
 
 /* found at https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83 */
 float fbm(vec2 x) {
-    float v = 0.0;
+    float v = -0.2;
     float a = 0.5;
     vec2 shift = vec2(100);
     // Rotate to reduce axial bias
-    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
-    for (int i = 0; i < 5; ++i) {
+    mat2 rot = 2 * mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
+    for (int i = 0; i < NB_OCTAVE; ++i) {
         v += a * noise(x);
-        x = rot * x * 2.0 + shift;
+        x = rot * x + shift;
         a *= 0.5;
     }
     return v;
@@ -46,9 +47,11 @@ float fbm(vec2 x) {
 
 void main() {
 
-    float noise = (fbm(5 *uv) + fbm(10 * uv) + fbm(2 * uv))/2;
+    float noise = (fbm(uv) +  fbm(2*uv));
 
-    color = vec3(noise,noise,noise);
+    //float noise = (fbm( 2 * uv) + fbm(3 * uv) + fbm(uv))/2;
+
+    color = vec3(noise);
 }
 
 

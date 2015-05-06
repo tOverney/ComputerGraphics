@@ -2,18 +2,20 @@
 #include "FrameBuffer.h"
 #include "_terrain/terrain.h"
 #include "_quad/quad.h"
+#include <cmath>
 
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
 
 int WIDTH = 1680;
 int HEIGHT = 1001;
+const int HEIGHT_MAP_DIM = 1024;
 
 mat4 projection_matrix;
-mat4 view_matrix;
-double y_0;
+mat4 lookat_matrix;
+float zoom_value, y_0;
 
 
-FrameBuffer fb(WIDTH, HEIGHT);
+FrameBuffer fb(HEIGHT_MAP_DIM, HEIGHT_MAP_DIM);
 Terrain terrain;
 Quad quad;
 
@@ -31,8 +33,14 @@ void resize_callback(int width, int height) {
     std::cout << "Window has been resized to " << WIDTH << "x" << HEIGHT << "." << std::endl;
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    projection_matrix = Eigen::perspective(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
+    projection_matrix = Eigen::perspective(45.0f, (GLfloat)WIDTH / HEIGHT, 0.0001f, 100.0f);
 
+}
+
+mat4 compute_view() {
+    Transform _M = Transform::Identity();
+    _M *= Eigen::Translation3f(0, 0, zoom_value);
+    return _M.matrix() * lookat_matrix;
 }
 
 void init(){
@@ -43,7 +51,7 @@ void init(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 
-    view_matrix = Eigen::lookAt(eye, center, up);
+    lookat_matrix = Eigen::lookAt(eye, center, up);
 
     // TODO: initialize framebuffer
     GLuint fb_tex = fb.init();
@@ -53,6 +61,7 @@ void init(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         quad.draw();
     fb.unbind();
+    glViewport(0, 0, WIDTH, HEIGHT);
 
 
     terrain.init(fb_tex);
@@ -67,7 +76,7 @@ void display(){
     // Draw a quad on the ground.
     mat4 quad_model_matrix = Eigen::Affine3f(
         Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
-    terrain.draw(quad_model_matrix, view_matrix, projection_matrix, time);
+    terrain.draw(quad_model_matrix, compute_view(), projection_matrix, time);
     
 
     check_error_gl();
@@ -81,12 +90,12 @@ vec2 transform_screen_coords(int x, int y) {
 }
 
 void mouse_button(int button, int action) {
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        int x_i, y_i;
-        glfwGetMousePos(&x_i, &y_i);
-        vec2 p = transform_screen_coords(x_i, y_i);
-        y_0 = p.y();
-    }
+    // if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    //     int x_i, y_i;
+    //     glfwGetMousePos(&x_i, &y_i);
+    //     vec2 p = transform_screen_coords(x_i, y_i);
+    //     y_0 = p.y();
+    // }
 }
 
 void mouse_pos(int x, int y) {
@@ -98,12 +107,8 @@ void mouse_pos(int x, int y) {
         // should zoom out and it. For that you have to update the current
         // 'view_matrix' with a translation along the z axis.
         vec2 p = transform_screen_coords(x, y);
-
-        Transform _M = Transform::Identity();
-        _M *= Eigen::Translation3f(0, 0, p.y() - y_0);
+        zoom_value += fmin(fmax(p.y() - y_0, -0.1), 0.1);
         y_0 = p.y();
-        mat4 trans_z_mat = _M.matrix();
-        view_matrix = trans_z_mat*view_matrix ;
     }
 }
 
@@ -139,7 +144,7 @@ void keyboard(int key, int action){
         default:
             break;
     }
-    view_matrix = Eigen::lookAt(eye, center, up);
+    lookat_matrix = Eigen::lookAt(eye, center, up);
 }
 
 
