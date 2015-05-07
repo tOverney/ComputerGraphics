@@ -50,21 +50,5 @@ void main() {
                      texture(seamless_rock, 10*uv).rgb * a_rock;
 
     color = /*vec3( height_v, height_v, height_v); /*(normal_mv + vec3(1.0, 1.0, 1.0))/2; //*/shading(raw_color);
-    //color = shading(vec3 (1));
 
-    /*
-        if (height_v < 0.0)
-        {
-            color = vec3(1.0,0.0,0.0);
-        }
-        else if (height_v > 1.0)
-        {
-            color = vec3(0.0,1.0,0.0);
-        }
-        else
-        {
-          //  color = vec3(exp(-(height_v - 0.4)*(height_v - 0.4)));
-           // color = vec3 (pow (height_v - 0.6, 4.)) * 0.5 + 0.5;
-        }
-        */
 }
