@@ -1,6 +1,7 @@
 #include "icg_common.h"
 #include "FrameBuffer.h"
 #include "_terrain/terrain.h"
+#include "_sea/sea.h"
 #include "_quad/quad.h"
 #include <cmath>
 
@@ -18,6 +19,7 @@ float zoom_value, y_0;
 FrameBuffer fb(HEIGHT_MAP_DIM, HEIGHT_MAP_DIM);
 Terrain terrain;
 Quad quad;
+Sea sea;
 
 vec3 eye = vec3(0.9f, 0.9f, 1.8f);
 vec3 center = vec3(0.0f, 0.0f, 0.0f);
@@ -65,6 +67,7 @@ void init(){
 
 
     terrain.init(fb_tex);
+    sea.init();
     check_error_gl();
 }
 
@@ -77,7 +80,7 @@ void display(){
     mat4 quad_model_matrix = Eigen::Affine3f(
         Eigen::Translation3f(vec3(0.0f, -0.25f, 0.0f))).matrix();
     terrain.draw(quad_model_matrix, compute_view(), projection_matrix, time);
-    
+    sea.draw(quad_model_matrix, compute_view(), projection_matrix, time);
 
     check_error_gl();
 

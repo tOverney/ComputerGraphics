@@ -86,25 +86,25 @@ public:
         glGenTextures(1, &_snow);
         glBindTexture(GL_TEXTURE_2D, _snow);
         glfwLoadTexture2D("_terrain/seamless_snow.tga", 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         glGenTextures(1, &_grass);
         glBindTexture(GL_TEXTURE_2D, _grass);
         glfwLoadTexture2D("_terrain/seamless_grass.tga", 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         glGenTextures(1, &_rock);
         glBindTexture(GL_TEXTURE_2D, _rock);
         glfwLoadTexture2D("_terrain/seamless_rock.tga", 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         glGenTextures(1, &_sand);
         glBindTexture(GL_TEXTURE_2D, _sand);
         glfwLoadTexture2D("_terrain/seamless_sand.tga", 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         _height_map = (height_map == -1) ? _rock : height_map;

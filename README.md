@@ -6,6 +6,7 @@
 ## Textures
 * Have them blend in a nice way
 * add rocks
+* MipMapping
 
 ## Water
 * add the water plan
