@@ -113,6 +113,8 @@ public:
         glUniform1i(sand_id, 4 );
       */
         // to avoid the current object being polluted
+
+
         glBindVertexArray(0);
         glUseProgram(0);
     }
@@ -150,6 +152,9 @@ public:
         glBindTexture(GL_TEXTURE_2D, _sand);
 
         */
+        // Pass the current time stamp to the shader.
+        glUniform1f(glGetUniformLocation(_pid, "time"), time);
+
 
         // Setup MVP
         mat4 MV = view*model;

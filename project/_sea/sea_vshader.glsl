@@ -4,6 +4,7 @@ uniform mat4 model_view;
 uniform mat4 projection;
 uniform sampler2D height_map;
 
+
 in vec2 position;
 
 out vec2 uv;
