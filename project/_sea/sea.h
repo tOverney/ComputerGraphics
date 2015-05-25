@@ -7,7 +7,7 @@ protected:
     GLuint _vbo_position; ///< memory buffer for positions
     GLuint _vbo_index;    ///< memory buffer for indice
     GLuint _pid;          ///< GLSL shader program ID
-    GLuint _snow, _grass, _rock, _sand;    ///< Texture ID
+    GLuint _sea;           /// texture ID
     GLuint _height_map;   ///< Texture ID of the height map
     GLuint _num_indices;  ///< number of vertices to render
     
@@ -30,17 +30,6 @@ public:
             // Always two subsequent entries in 'vertices' form a 2D vertex position.
             int grid_dim = 512;
 
-            /* e.g. a small grid will be numbered as such in vertices:
-                2 1 0
-                5 4 3
-                8 7 6
-
-                so we'll have to take the indexes in the following order:
-                0 3 1 / 1 3 4 / 2 4 5
-
-                and we have to repeat the begining / end of lines to avoid "border"
-                effects.
-             */
 
             // indexes
             for (int y = 0; y < grid_dim - 1; ++y) {
@@ -81,14 +70,14 @@ public:
             glEnableVertexAttribArray(loc_position);
             glVertexAttribPointer(loc_position, 2, GL_FLOAT, DONT_NORMALIZE, ZERO_STRIDE, ZERO_BUFFER_OFFSET);
         }
-       /*
+
         // Load texture
-        glGenTextures(1, &_snow);
-        glBindTexture(GL_TEXTURE_2D, _snow);
-        glfwLoadTexture2D("_terrain/seamless_snow.tga", 0);
+        glGenTextures(1, &_sea);
+        glBindTexture(GL_TEXTURE_2D, _sea);
+        glfwLoadTexture2D("_sea/sea.tga", 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+/*
         glGenTextures(1, &_grass);
         glBindTexture(GL_TEXTURE_2D, _grass);
         glfwLoadTexture2D("_terrain/seamless_grass.tga", 0);
@@ -143,11 +132,11 @@ public:
     void draw(const mat4& model, const mat4& view, const mat4& projection, float time){
         glUseProgram(_pid);
         glBindVertexArray(_vao);
-       /*
+
         // Bind textures
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, _height_map);
-
+        glBindTexture(GL_TEXTURE_2D, _sea);
+/*
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, _snow);
 
