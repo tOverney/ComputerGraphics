@@ -21,7 +21,7 @@ Terrain terrain;
 Quad quad;
 Sea sea;
 
-vec3 eye = vec3(0.9f, 0.9f, 1.8f);
+vec3 eye = vec3(-5.1f, 0.2f, 1.5f);
 vec3 center = vec3(0.0f, 0.0f, 0.0f);
 vec3 up = vec3(0.0f, 1.0f, 0.0f);
 float step = 0.1f;
